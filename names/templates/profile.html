@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type=text/javascript>
+
+    </script>
+{% endblock %}
+
+{% block page_content %}
+    <h1>Your Account</h1>
+
+    <!-- Toggle suggestions/selections. It works! Holy moley!!! -->
+    <h3>Toggle voting</h3>
+    {% if current_user.suggestions %}
+        <p id="toggle_status">Currently, logged-in users can type suggestions for your name.</p>
+        <p><a id="toggle_suggestions">
+            Click here to allow users and guests to select a choice from your suggested names.
+        </a></p>
+    {% else %}
+        <p id="toggle_status">Currently, users and guests can select a choice from your suggested names.</p>
+        <p><a id="toggle_suggestions">
+            Click here to allow logged-in users to type suggestions for your name.
+        </a></p>
+    {% endif %}
+    <!-- end toggle -->
+
+    <!-- See suggested names. TODO: Make name removal, reporting work -->
+    <h3>Suggested Names</h3>
+    <p>Remove unwanted names by clicking the X. Hopefully. I am but a simple college student.</p>
+
+    <div class="row">
+    {% for n in names %}
+        <div class="col-lg-3" id="{{ n.id }}">
+            <p><b>{{ n.name }} &nbsp; <a id="delete-{{ n.id }}">&times;</a></b></p>
+            <p>Votes: {{ n.score }}</p>
+            <p><a href="#"><i>Report this name as offensive</i></a></p>
+        </div>
+    {% endfor %}
+    </div>
+    <!-- end suggested names -->
+
+    <!-- Change photo/about. All functionality goes through flask. -->
+    <h3>Change details</h3>
+    <p>I don't have anything here for changing password as I am but a <del>simple</del> lazy college student.</p>
+    {{ wtf.quick_form(signupform) }}
+    <!-- end photo/about -->
+
+
+    <!-- Delete account. TODO: Make it actually do something -->
+    <h3>Delete your account</h3>
+    <p><a href="#"><b>Click here to delete your account, probably forever</b></a></p>
+    <!-- end delete account -->
+
+{% endblock %}

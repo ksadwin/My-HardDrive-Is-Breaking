@@ -1,0 +1,29 @@
+body, html {
+    height: 100%;
+}
+.height {
+    height: 85%;
+}
+#photo {
+    float: left;
+    margin: 20px;
+    border: 10px solid cornflowerblue;
+    max-height: 70%;
+}
+#photo img {
+    max-height: 100%;
+}
+#blurb, #votes {
+    max-width: 500px;
+    margin: 20px;
+    padding: 20px;
+    border: 10px solid cornflowerblue;
+    float: left;
+}
+#next {
+    font-size: 300%;
+    text-shadow: 0 0 1em white;
+    position: fixed;
+    bottom: 10%;
+    right: 5%;
+}
