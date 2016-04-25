@@ -3,15 +3,13 @@
 
 {% block scripts %}
     {{ super() }}
-    <script type=text/javascript>
-
-    </script>
+    <script src="../static/profile.js"></script>
 {% endblock %}
 
 {% block page_content %}
     <h1>Your Account</h1>
 
-    <!-- Toggle suggestions/selections. It works! Holy moley!!! -->
+    <!-- Toggle suggestions/selections. -->
     <h3>Toggle voting</h3>
     {% if current_user.suggestions %}
         <p id="toggle_status">Currently, logged-in users can type suggestions for your name.</p>
@@ -26,31 +24,31 @@
     {% endif %}
     <!-- end toggle -->
 
-    <!-- See suggested names. TODO: Make name removal, reporting work -->
+    <!-- See suggested names. -->
     <h3>Suggested Names</h3>
     <p>Remove unwanted names by clicking the X. Hopefully. I am but a simple college student.</p>
 
     <div class="row">
     {% for n in names %}
         <div class="col-lg-3" id="{{ n.id }}">
-            <p><b>{{ n.name }} &nbsp; <a id="delete-{{ n.id }}">&times;</a></b></p>
+            <p><b>{{ n.name }} &nbsp; <a class="delete" id="delete-{{ n.id }}">&times;</a></b></p>
             <p>Votes: {{ n.score }}</p>
-            <p><a href="#"><i>Report this name as offensive</i></a></p>
+            <p><a class="report" id="report-{{ n.id }}"><i>Report this name as offensive</i></a></p>
         </div>
     {% endfor %}
     </div>
     <!-- end suggested names -->
 
-    <!-- Change photo/about. All functionality goes through flask. -->
+    <!-- Change photo/about. TODO: actually make this a thing -->
     <h3>Change details</h3>
-    <p>I don't have anything here for changing password as I am but a <del>simple</del> lazy college student.</p>
-    {{ wtf.quick_form(signupform) }}
+    <p>What's that? You wanted to change your account details? That sounds really hard.
+        Maybe if you come back much later, I'll have figured something out.</p>
     <!-- end photo/about -->
 
 
-    <!-- Delete account. TODO: Make it actually do something -->
+    <!-- Delete account. -->
     <h3>Delete your account</h3>
-    <p><a href="#"><b>Click here to delete your account, probably forever</b></a></p>
+    <p><a href="{{ url_for("delete_account") }}"><b>Click here to delete your account forever</b></a></p>
     <!-- end delete account -->
 
 {% endblock %}

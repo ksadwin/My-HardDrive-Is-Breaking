@@ -3,11 +3,15 @@ from flask.ext.login import AnonymousUserMixin
 from flask import request
 
 
+# TODO: Eliminate the interface because it didn't end up working
+# TODO: Implement togglable profile privacy
+
+
 class IUser(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     flags = db.Column(db.Integer)
-
+    ip = db.Column(db.String(32))
     is_active = db.Column(db.Boolean)
     is_authenticated = db.Column(db.Boolean)
     is_anonymous = db.Column(db.Boolean)
