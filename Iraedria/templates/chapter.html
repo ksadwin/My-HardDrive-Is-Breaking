@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}Chapter {{ current.num }} - {{ bookstr.title() }} - {% endblock %}
+
+{% block content %}
+
+        <div class="container chapter">
+            <h2>Chapter {{ current.num }}</h2>
+            {{ current.text|safe }}
+            <div class="arrow right">
+                <a href="{{ url_for('chapter', book=bookstr, num=current.num+1) }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a>
+            </div>
+        </div>
+
+{% endblock %}

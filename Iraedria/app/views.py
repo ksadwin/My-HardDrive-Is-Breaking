@@ -1,29 +1,72 @@
 from app import app
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, abort
+from app.models import Chapter, Book, update
 
 
-# intro page, general description, in ~/static/index.html
+# VIEW FUNCTIONS
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
 @app.route('/')
 def index():
-    return render_template("../static/index.html")
+    """
+    Just return the index page. No dynamic elements, I think.
+    :return: nonstatic index template with number of available chapters
+    """
+    return render_template("index.html")
 
 
-# book intro page with chapter list. dynamically generates title, summary, bg img, chapters & descriptions
-@app.route('/<book>')
-def book_index(book):
-    # a placeholder page, just the prologue
-    return render_template("../static/prologue.html")
+@app.route('/<book>/prologue')
+def prologue(book):
+    """
+    Finds the prologue file from the book directory and renders it with the special prologue template.
+    :param book: title of book, case insensitive I guess. I don't know what I'll do for The Siege.
+    :return:
+    """
+    try:
+        bookenum = Book[book.lower()]
+        c = Chapter.query.filter_by(num=0, booknum=bookenum.value).first()
+        if c:
+            return render_template("prologue.html", text=c.text, book=book)
+        abort(404)
+    except KeyError:
+        abort(404)
 
 
-# chapter page. use 0 for prologue I guess
-@app.route('/<book>/<num>')
+@app.route('/<book>/<int:num>')
 def chapter(book, num):
-    # a placeholder page, just the first chapter
-    return render_template("../static/chapter1.html")
+    """
+    Finds a chapter in the directory given the book and chapter number, then heckin renders that template!
+    :param book: title of book
+    :param num: chapter number. if invalid, give a good ole 404 or something
+    :return: the diddly dang darn page!!
+    """
+    # this if statement is a small way in which i show my love for myself
+    if num == 0:
+        return redirect(url_for('prologue', book=book))
+    try:
+        bookenum = Book[book.lower()]
+        c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
+        if c:
+            return render_template("chapter.html", current=c, bookstr=book)
+        abort(404)
+    except KeyError:
+        abort(404)
 
 
-# session variable will hold onto bookmarked page if I bother to implement this
 @app.route('/bookmark')
 def bookmark():
-    # a placeholder page, just the first chapter
-    return render_template("../static/chapter1.html")
+    """
+    session variable will hold onto bookmarked page if I bother to implement this
+    :return: for now, just the index
+    """
+    return redirect(url_for('index'))
+
+
+@app.route('/_update_db')
+def update_db():
+    update()
+    return redirect(url_for('index'))

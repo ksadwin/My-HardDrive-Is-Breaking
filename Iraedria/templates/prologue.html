@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block subtitle %}Prologue - {{ book.title() }} - {% endblock %}
+
+{% block content %}
+        <div class="container prologue">
+            <h2>Prologue</h2>
+            {{ text|safe }}
+            <div class="arrow right">
+                <a href="{{ url_for('chapter', book=book, num=1) }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a>
+            </div>
+        </div>
+{% endblock %}

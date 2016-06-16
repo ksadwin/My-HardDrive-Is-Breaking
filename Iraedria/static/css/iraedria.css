@@ -8,7 +8,9 @@
 }
 
 #page {
-    padding-top: 60px;
+    position: absolute;
+    top: 50px;
+    width: 100%;
     background-color: rgba(0,0,0,.8);
     min-height: 100%;
 }
@@ -25,7 +27,7 @@ body {
 
 
 .chapter {
-    background-color: rgba(255,255,255,.9);
+    background-color: rgba(255,255,255,.7);
     max-width: 900px;
     margin-top: 60px;
     margin-bottom: 60px;

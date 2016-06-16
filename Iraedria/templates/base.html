@@ -1,42 +1,73 @@
-{% extends "bootstrap/base.html" %}
+<!DOCTYPE html>
 
-{% block title %}Find A Name For Me{% block subtitle %}{% endblock %}{% endblock %}
-
-{% block navbar %}
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="a dumb novel" name="description"/>
+<meta content="ksadwin" name="author"/>
+<title>
+   {% block subtitle %}{% endblock %}Iraedria | K SADWIN
+  </title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<!-- Custom CSS -->
+<link href="{{ url_for('static', filename='css/iraedria.css') }}" rel="stylesheet" type="text/css"/>
+</head>
+<body>
 <div class="navbar navbar-inverse" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">Find A Name For Me</a>
-        </div>
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                {% if current_user.is_active %}
-                    <li><a href="/profile">{{ current_user.username }}'s Profile</a></li>
-                    <li><a href="{{ url_for("logout") }}">Log Out</a></li>
-                {% else %}
-                    <li><a href="{{ url_for("signin") }}">Sign In</a></li>
-                {% endif %}
-                {% block links %}{% endblock %}
-            </ul>
-        </div>
-    </div>
+<div class="container">
+<div class="navbar-header">
+<button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
+<span class="sr-only">
+       Toggle navigation
+      </span>
+<span class="icon-bar">
+</span>
+<span class="icon-bar">
+</span>
+<span class="icon-bar">
+</span>
+</button>
+<a class="navbar-brand" href="/">
+<span class="bigger">I</span>raedria
+     </a>
 </div>
-{% endblock %}
-
-{% block content %}
-<div class="container height">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
-    {% block page_content %}{% endblock %}
+<div class="navbar-collapse collapse">
+<ul class="nav navbar-nav" id="chapter-list">
+<!-- with any luck, this will become automatically populated! -->
+<li class="dropdown">
+<a aria-expanded="false" aria-haspopup="true" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button">
+        Vega
+        <span class="caret">
+</span>
+</a>
+<ul class="dropdown-menu" id="vega">
+<li id="vega-0"><a href="{{ url_for('chapter', num=0, book='vega') }}">Prologue</a></li><li id="vega-1"><a href="{{ url_for('chapter', num=1, book='vega') }}">Chapter 1</a></li><li id="vega-2"><a href="{{ url_for('chapter', num=2, book='vega') }}">Chapter 2</a></li></ul>
+</li>
+</ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+<a href="http://ksadwin.com">
+        About the author
+       </a>
+</li>
+</ul>
 </div>
-{% endblock %}
+</div>
+</div>
+    <div id="page" class="container-fluid">
+        {% block content %}
+        {% endblock %}
+    </div>
+  <!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>
