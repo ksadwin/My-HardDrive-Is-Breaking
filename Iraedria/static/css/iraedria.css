@@ -3,13 +3,18 @@
     text-transform: uppercase;
 }
 
+.navbar-custom {
+    background-color: black;
+}
+
 .bigger {
     font-size: 125%; 
 }
 
 #page {
     position: absolute;
-    top: 50px;
+    top: 0px;
+    padding-top: 40px;
     width: 100%;
     background-color: rgba(0,0,0,.8);
     min-height: 100%;
