@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, redirect, url_for, abort
-from app.models import Chapter, Book, update
+from app.models import Chapter, Book
 
 
 # VIEW FUNCTIONS
@@ -65,8 +65,3 @@ def bookmark():
     """
     return redirect(url_for('index'))
 
-
-@app.route('/_update_db')
-def update_db():
-    update()
-    return redirect(url_for('index'))

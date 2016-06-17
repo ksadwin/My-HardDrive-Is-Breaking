@@ -8,16 +8,19 @@
 <meta content="a dumb novel" name="description"/>
 <meta content="ksadwin" name="author"/>
 <title>
-   {% block subtitle %}{% endblock %}Iraedria | K SADWIN
+   {% block subtitle %}{% endblock %}Iraedria
   </title>
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
-      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet">
 <!-- Custom CSS -->
 <link href="{{ url_for('static', filename='css/iraedria.css') }}" rel="stylesheet" type="text/css"/>
-</head>
+</link></head>
 <body>
-<div class="navbar navbar-inverse" role="navigation">
+<div class="container-fluid" id="page">
+        {% block content %}
+        {% endblock %}
+    </div>
+<div class="navbar navbar-inverse navbar-fixed-top navbar-custom" role="navigation">
 <div class="container">
 <div class="navbar-header">
 <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse" type="button">
@@ -50,7 +53,7 @@
 </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-<a href="http://ksadwin.com">
+<a href="http://ksadwin.com" target="_blank">
         About the author
        </a>
 </li>
@@ -58,16 +61,10 @@
 </div>
 </div>
 </div>
-    <div id="page" class="container-fluid">
-        {% block content %}
-        {% endblock %}
-    </div>
-  <!-- jQuery -->
+<!-- jQuery -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
-        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
-        crossorigin="anonymous">
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
 </script>
 </body>
 </html>
