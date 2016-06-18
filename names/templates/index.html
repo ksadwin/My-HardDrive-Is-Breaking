@@ -3,7 +3,7 @@
 
 {% block styles %}
     {{ super() }}
-    <link href="{{ url_for('static', filename="index.css") }}" rel="stylesheet" type="text/css">
+    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
 {% block page_content %}
@@ -16,6 +16,6 @@
             <div id="votes">
                 {{ wtf.quick_form(form) }}
             </div>
-        <div id="next"><a href="{{ url_for("index") }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a></div>
+        <div id="next"><a href="{{ url_for('index') }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a></div>
 
 {% endblock %}

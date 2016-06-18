@@ -1,5 +1,5 @@
 from app import db
-from flask.ext.login import AnonymousUserMixin
+from flask_login import AnonymousUserMixin
 from flask import request
 
 
@@ -42,8 +42,17 @@ class User(IUser, db.Model):
         self.is_authenticated = True
         self.is_anonymous = False
 
+    def is_active(self):
+        return self.is_active
+
+    def is_authenticated(self):
+        return self.is_authenticated
+
+    def is_anonymous(self):
+        return self.is_anonymous
+
     def __repr__(self):
-        return "<User %r>" % self.name
+        return "<User %r>" % self.username
 
 
 class Anon(AnonymousUserMixin):

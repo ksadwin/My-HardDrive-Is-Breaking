@@ -17,18 +17,17 @@ def public_logged_in(u):
     if u.suggestions:
         f = SuggestForm()
         if f.validate_on_submit():
-            if current_user.is_active:
+            if current_user.is_active():
                 suggester = current_user
             else:
                 suggester = None
-                session['visited'].append(u.username)
+                session[u.username] = True
             n = Name(f.name.data, u, suggester)
             v = Vote(n, u, suggester)
 
             db.session.add(n)
             db.session.add(v)
             db.session.commit()
-            return redirect(url_for("index"))
     else:
         names = Name.query.filter_by(userID=u.id).order_by('score').all()
         f = SelectForm()
@@ -37,15 +36,14 @@ def public_logged_in(u):
             # this might be wonky, in ithacamusic it somehow understood the object from the id automatically??
             n = Name.query.get(f.name.data)
             n.score += 1
-            if current_user.is_active:
+            if current_user.is_active():
                 suggester = current_user
             else:
                 suggester = None
-                session['visited'].append(u.username)
+                session[u.username] = True
             v = Vote(n, u, suggester)
             db.session.add(v)
             db.session.commit()
-            return redirect(url_for("index"))
     return render_template("index.html", form=f, user=u)
 
 
@@ -65,11 +63,18 @@ def delete_name_by_id(name_id):
     return suggester
 
 
+def print_visited():
+    namelist = ""
+    for username in session.keys():
+        namelist += username + ", "
+    return namelist
+
+
 # THE VIEWS
 
-@app.route('/signin', methods=('GET', 'POST'))
+@app.route('/signin/', methods=('GET', 'POST'))
 def signin():
-    if current_user.is_active:
+    if current_user.is_active():
         flash("You are already signed in.")
         return redirect(url_for("index"))
     signup = SignUpForm()
@@ -82,8 +87,7 @@ def signin():
             if pwd_context.verify(password, u.password):
                 login_user(u)
                 flash("You're in.")
-                # FIXME: the first profile you vote on goes towards yourself for some reason
-                return redirect(url_for("index"))
+                return redirect(url_for("public_profile", name=u.username))
             else:
                 flash("Wrong password.")
         else:
@@ -107,28 +111,29 @@ def signin():
     return render_template("signin.html", signup=signup, login=login)
 
 
+# FIXME: this gets called more than the standard, let's say, once per click. and it hecks up the names.
 @app.route('/', methods=('GET', 'POST'))
 def index():
-    create_session()
     users = list(User.query.all())
-    while users:
-        u = random.choice(users)
-        if (current_user.is_active and Vote.query.filter_by(voterID=current_user.id, userID=u.id).first())\
-                or (current_user.is_anonymous and u.username in session['visited']):
-            users.remove(u)
-        else:
+    u = random.choice(users)
+    if current_user.is_anonymous():
+        if u.username not in session.keys():
+            app.logger.debug(u)
             return public_logged_in(u)
+    elif Vote.query.filter_by(voterID=current_user.id, userID=u.id).first() is None:
+        return public_logged_in(u)
+    else:
+        return redirect(url_for('index'))
     return render_template("error.html", message="Either you have voted for every user on the website or a table got "
                                                  "dropped. If it's the former, thanks! If it's the latter, please do "
                                                  "not hold it against me. I am but a simple college student.")
 
 
-# Don't develop this until you know how to make sure the same user doesn't vote a million times.
-@app.route('/<name>', methods=('GET', 'POST'))
+@app.route('/<name>/', methods=('GET', 'POST'))
 def public_profile(name):
     user = User.query.filter_by(username=name).first()
-    if not user:
-        # This message literally shows up on every page??? make it stop?????????????/
+    if user is None:
+        # FIXME: This message literally shows up on every page??? make it stop?????????????/
         # flash("User not found.")
         return redirect(url_for("index"))
     elif user != current_user:
@@ -139,7 +144,7 @@ def public_profile(name):
     return public_logged_in(user)
 
 
-@app.route('/profile', methods=('GET', 'POST'))
+@app.route('/profile/', methods=('GET', 'POST'))
 @login_required
 def private_profile():
     s = SignUpForm()
@@ -163,12 +168,24 @@ def private_profile():
     return render_template("profile.html", signupform=s, names=names)
 
 
+@app.route('/cookies/')
+def view_cookies():
+    return render_template("error.html", message=print_visited())
+
+
+# TODO: do not leave this in the deployed app I swear to every god
+@app.route('/delete_cookies/')
+def delete_cookies():
+    session.clear()
+    return render_template("error.html", message=print_visited())
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
 
-@app.route("/logout")
+@app.route("/logout/")
 @login_required
 def logout():
     logout_user()
@@ -176,7 +193,7 @@ def logout():
     return redirect(url_for("index"))
 
 
-@app.route("/delete_account")
+@app.route("/delete_account/")
 @login_required
 def delete_account():
     user = User.query.get(current_user.id)
@@ -196,7 +213,7 @@ def delete_account():
 
 # invisible AJAX places
 
-@app.route("/_toggle_suggestions")
+@app.route("/_toggle_suggestions/")
 @login_required
 def toggle_suggestions():
     # current_user is a copy, find the original
@@ -212,14 +229,14 @@ def toggle_suggestions():
     return jsonify(s=user.suggestions)
 
 
-@app.route("/_delete-<int:name_id>")
+@app.route("/_delete-<int:name_id>/")
 @login_required
 def delete_name(name_id):
     delete_name_by_id(name_id)
     return jsonify(id=name_id)
 
 
-@app.route("/_report-<int:name_id>")
+@app.route("/_report-<int:name_id>/")
 @login_required
 def report_name(name_id):
     reported = delete_name_by_id(name_id)
