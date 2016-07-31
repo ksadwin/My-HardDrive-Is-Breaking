@@ -41,7 +41,7 @@ body {
 
 .chapter p, .prologue p, .cover p {
     font-family: Garamond, serif;
-    font-size: 22px;
+    font-size: 1.4em;
     padding-bottom: 1.2em;
     max-width: 700px;
     margin: auto;
@@ -58,18 +58,22 @@ body {
 }
 
 p .drop-cap {
-    font-size: 400%;
+    font-size: 4em;
     float: left;
     line-height: 1em;
     padding-right: 1%;
 }
 
 .arrow {
-    font-size: 400%;
+    font-size: 4em;
 }
 
 .right {
     text-align: right;
+}
+
+.like a:visited {
+    color: #ff8080;
 }
 
 /* For index */

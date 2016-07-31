@@ -1,12 +1,12 @@
 from app import db
 from flask_login import AnonymousUserMixin
-from flask import request
+from flask import request, url_for
 
 
-# TODO: Eliminate the interface because it didn't end up working
+# FIXME: Eliminate the interface because it didn't end up working
 # TODO: Implement togglable profile privacy
 
-
+"""
 class IUser(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -18,12 +18,18 @@ class IUser(db.Model):
 
     def __init__(self):
         self.flags = 0
-
-    def get_id(self):
-        return self.id
+"""
 
 
-class User(IUser, db.Model):
+class User(db.Model):
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key=True)
+    flags = db.Column(db.Integer)
+    ip = db.Column(db.String(32))
+    active = db.Column(db.Boolean)
+    authenticated = db.Column(db.Boolean)
+    anonymous = db.Column(db.Boolean)
+
     username = db.Column(db.String(32))
     password = db.Column(db.String(128))
     photo_url = db.Column(db.String(128))
@@ -31,25 +37,41 @@ class User(IUser, db.Model):
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
 
     def __init__(self, name, password, url, about):
-        super().__init__()
+        self.flags = 0
         self.username = name
         self.password = password
-        self.photo_url = url
-        self.about = about
+
+        no_photo = False
+        if url == "":  # no photo given. TODO?: check photo validity here
+            self.photo_url = url_for('static', filename='default.jpg')
+            no_photo = True
+        else:  # photo given
+            self.photo_url = url
+
+        if about == "" and no_photo:  # no photo or description provided
+            self.about = "This user isn't giving you much to work with. Well, do your best."
+        elif about == "":  # there is a photo but no description
+            self.about = "This user thinks a picture is worth a thousand words."
+        else:  # everything is normal
+            self.about = about
+
         self.suggestions = True
 
-        self.is_active = True
-        self.is_authenticated = True
-        self.is_anonymous = False
+        self.active = True
+        self.authenticated = True
+        self.anonymous = False
 
     def is_active(self):
-        return self.is_active
+        return self.active
 
     def is_authenticated(self):
-        return self.is_authenticated
+        return self.authenticated
 
     def is_anonymous(self):
-        return self.is_anonymous
+        return self.anonymous
+
+    def get_id(self):
+        return self.id
 
     def __repr__(self):
         return "<User %r>" % self.username

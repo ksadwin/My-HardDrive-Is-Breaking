@@ -26,6 +26,8 @@ class Chapter(db.Model):
     date_added = db.Column(db.Integer)
     date_modified = db.Column(db.Integer)
     booknum = db.Column(db.Integer)
+    likes = db.Column(db.Integer)
+    photo_url = db.Column(db.String)  # edit this column manually with the db viewer
 
     def __init__(self, filename, bookstr):
         bookstr = bookstr.lower()
@@ -37,11 +39,10 @@ class Chapter(db.Model):
 
         self.text = get_text_from_path(filename)
 
+        self.likes = 0
+
     def __repr__(self):
         return "%r: Chapter %r" % (Book(self.booknum).name.title(), self.id)
-
-
-
 
 
 db.create_all()

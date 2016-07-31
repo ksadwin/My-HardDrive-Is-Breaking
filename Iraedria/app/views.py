@@ -1,4 +1,4 @@
-from app import app
+from app import app, db
 from flask import render_template, redirect, url_for, abort
 from app.models import Chapter, Book
 
@@ -7,6 +7,11 @@ from app.models import Chapter, Book
 
 @app.errorhandler(404)
 def page_not_found(e):
+    """
+    A flask built-in for displaying my personally handcrafted 404 page.
+    :param e: the error, not that I ever use it, because I am a terrible person
+    :return: a 404 page
+    """
     return render_template('404.html'), 404
 
 
@@ -14,7 +19,7 @@ def page_not_found(e):
 def index():
     """
     Just return the index page. No dynamic elements, I think.
-    :return: nonstatic index template with number of available chapters
+    :return: static index template
     """
     return render_template("index.html")
 
@@ -23,8 +28,8 @@ def index():
 def prologue(book):
     """
     Finds the prologue file from the book directory and renders it with the special prologue template.
-    :param book: title of book, case insensitive I guess. I don't know what I'll do for The Siege.
-    :return:
+    :param book: title of book, case insensitive I guess.
+    :return: the prologue if it exists, a 404 if it does not
     """
     try:
         bookenum = Book[book.lower()]
@@ -41,7 +46,7 @@ def chapter(book, num):
     """
     Finds a chapter in the directory given the book and chapter number, then heckin renders that template!
     :param book: title of book
-    :param num: chapter number. if invalid, give a good ole 404 or something
+    :param num: chapter number. if invalid, triggers a good ole 404
     :return: the diddly dang darn page!!
     """
     # this if statement is a small way in which i show my love for myself
@@ -57,6 +62,26 @@ def chapter(book, num):
         abort(404)
 
 
+# FIXME: this does not work without AJAX tomfoolery, so there's an ugly redirect now
+@app.route('/<book>/<int:num>/_like')
+def _like(book, num):
+    """
+    Increments likes counter for a chapter.
+    :param book: title of book
+    :param num: chapter number
+    :return: None.
+    """
+    try:
+        bookenum = Book[book.lower()]
+        c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
+        if c:
+            c.likes += 1
+        db.session.commit()
+    except KeyError:
+        pass
+    return redirect(url_for('chapter', book=book, num=num))
+
+
 @app.route('/bookmark')
 def bookmark():
     """
@@ -64,4 +89,3 @@ def bookmark():
     :return: for now, just the index
     """
     return redirect(url_for('index'))
-

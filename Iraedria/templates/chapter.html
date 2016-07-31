@@ -6,10 +6,39 @@
 
         <div class="container chapter">
             <h2>Chapter {{ current.num }}</h2>
+
             {{ current.text|safe }}
+
+            <!-- Images link -->
+            <div class="arrow right">
+                <a data-toggle="modal" data-target="#images"><i class="glyphicon glyphicon-picture"></i></a>
+            </div>
+            <!-- Likes link -->
+            <div class="arrow right like">
+                <a href="{{ url_for('_like', book=bookstr, num=current.num) }}"><i class="glyphicon glyphicon-thumbs-up"></i></a>
+            </div>
+            <!-- Next chapter link -->
             <div class="arrow right">
                 <a href="{{ url_for('chapter', book=bookstr, num=current.num+1) }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a>
             </div>
         </div>
+
+<!-- Image Modal -->
+<div class="modal fade" id="images" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Chapter {{ current.num }} imagery</h4>
+      </div>
+      <div class="modal-body">
+        <img src="{{ current.photo_url }}" alt="Sorry, looks like there's no image for this chapter.">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}

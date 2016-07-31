@@ -6,6 +6,16 @@
     <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css">
 {% endblock %}
 
+{% block scripts %}
+    {{ super() }}
+    <script type=text/javascript>
+      // Replace broken images
+      $('img').error(function(){
+          $(this).attr('src', '{{ url_for('static', filename='default.jpg') }}');
+      });
+    </script>
+{% endblock %}
+
 {% block page_content %}
         <div id="photo">
             <img src="{{ user.photo_url }}" alt="There should be a photo of someone's beautiful face here." />
