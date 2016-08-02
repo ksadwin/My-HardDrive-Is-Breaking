@@ -76,6 +76,11 @@ p .drop-cap {
     color: #ff8080;
 }
 
+.modal-img {
+    max-width: 95%;
+    margin: auto;
+}
+
 /* For index */
 h1 {
     font-family: Garamond, serif;
