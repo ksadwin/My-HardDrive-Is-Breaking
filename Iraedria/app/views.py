@@ -82,6 +82,19 @@ def _like(book, num):
     return redirect(url_for('chapter', book=book, num=num))
 
 
+@app.route('/stats')
+def view_likes():
+    """
+    displays likes for each chapter so I don't have to dig through the server to pull the database every time
+    :return: extremely bland page displaying likes as a list
+    """
+    chaps = Chapter.query.all()
+    out = ""
+    for c in chaps:
+        out += "<p>Chapter %d: %d</p>\n" % (c.num, c.likes)
+    return out
+
+
 @app.route('/bookmark')
 def bookmark():
     """

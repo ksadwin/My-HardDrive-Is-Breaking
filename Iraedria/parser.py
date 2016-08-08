@@ -33,11 +33,11 @@ def parse(html):
     for p in paras:
         del p['class']
         del p['style']
-        p = add_attrs_to_p(p)
+        # p = add_attrs_to_p(p)
         bad_tags = ["span", "a"]
         for tag in bad_tags:
             for match in p.find_all(tag):
-                if match.get('class') == ["MsoCommentReference"]:
+                if match.get('class') == ["MsoCommentReference"]:  # if "MsoCommentReference" in match.get('class')?
                     match.extract()
                 else:
                     match.unwrap()
