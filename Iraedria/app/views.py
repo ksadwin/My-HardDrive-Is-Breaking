@@ -2,6 +2,8 @@ from app import app, db
 from flask import render_template, redirect, url_for, abort
 from app.models import Chapter, Book
 
+from tumblrtaggin.taggregator import find_tags
+
 
 # VIEW FUNCTIONS
 
@@ -13,6 +15,19 @@ def page_not_found(e):
     :return: a 404 page
     """
     return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    """
+    A flask built-in for displaying my personally handcrafted 500 page that just reminds me where to find the logs.
+    :param e:
+    :return: a very simple message
+    """
+    return """<h1>Internal Server Error</h1>
+    <p>The server encountered an internal error and was unable to complete your request.  Either the server is
+    overloaded or there is an error in the application.</p>
+    <p><i>note from admin to self: /var/log/apache2/error.log</i></p>"""
 
 
 @app.route('/')
@@ -82,6 +97,8 @@ def _like(book, num):
     return redirect(url_for('chapter', book=book, num=num))
 
 
+# SECRET VIEWS
+
 @app.route('/stats')
 def view_likes():
     """
@@ -102,3 +119,28 @@ def bookmark():
     :return: for now, just the index
     """
     return redirect(url_for('index'))
+
+
+@app.route('/taggregator/tumblr/<username>/<int:height>/<int:width>/<color>')
+def taggregator(username, height, width, color):
+    """
+    This is the cutest thing I've ever made, and I'm proud.
+    :param username: tumblr username
+    :param height: height of div
+    :param width: width of div
+    :param color: background color
+    :return: an html page with your top 10 (or fewer) tumblr tags
+    """
+    top_tags = find_tags(username)
+    return render_template("taggregator.html", username=username, top_tags=top_tags, height=height, width=width,
+                           color=color)
+
+
+# did you know ctrl+? comments things in pycharm?? what a handy misplacement of fingers I just had
+# @app.route("/test")
+# def test():
+#     url = url_for('taggregator', username="airdeari", height=500, width=500, color="magenta")
+#     html = "<p>with any luck here's an iframe</p><iframe src='"\
+#            + url + "' height=500 width=500 scrolling='no' frameBorder=0></iframe>"
+#     return html
+

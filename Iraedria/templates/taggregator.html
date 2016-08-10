@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>How utterly ludicrous. You've found my taggregator.</title>
+
+    <style>
+        .iframe {
+            height: {{ height-16 }}px;
+            width: {{ width-16 }}px;
+            background-color: {{ color }};
+            font-family: "Tahoma", sans-serif;
+            overflow: hidden;
+            padding: 0px 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="iframe">
+    <h4>{{ username }}'s latest trends</h4>
+{% for t in top_tags %}
+<a href="http://{{ username }}.tumblr.com/tagged/{{ t }}">#{{ t }}</a><br>
+{% endfor %}
+</div>
+</body>
+</html>

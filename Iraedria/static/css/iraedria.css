@@ -93,7 +93,23 @@ h2 {
     font-size: 200%;
 }
 
+/* investigate */
+ul li a:visited {
+    font-style: italic;
+}
+
+a {
+    color: white;
+}
+
+/* apparently the order is important??? who knew */
+a, a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+}
+
 /*old*/
+
+/*
 .demo {
     background-color: #fff8ee;
 }
@@ -162,10 +178,5 @@ h2 {
     color: orange;
 }
 
-a {
-    color: white;
-}
-/* apparently the order is important??? who knew */
-a, a:link, a:visited, a:hover, a:active {
-    text-decoration: none;
-}
+*/
+
