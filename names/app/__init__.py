@@ -10,6 +10,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 bootstrap = Bootstrap(app)
 
+
 # must go at end of file to avoid import loop
 from app import views, models
 

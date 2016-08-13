@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+{% import "bootstrap/wtf.html" as wtf %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sadwin's Taggregation Engine</title>
+    <!-- Latest compiled and minified CSS -->
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #2b2c28;
+        }
+        .center {
+            width: 700px;
+            margin: auto;
+            color: #a2e3c4;
+            padding-bottom: 50px;
+        }
+        .center h1 {
+            color: #fffafb;
+        }
+        .container {
+            background-color: #a2e3c4;
+            color: #fffafb;
+        }
+        .left {
+            float: left;
+            margin: 50px;
+        }
+        .not-left {
+            margin: 50px;
+            color: #fffafb;
+        }
+        .not-left textarea {
+            color: #131515;
+        }
+    </style>
+</head>
+<body>
+<div class="center">
+    <h1>Sadwin's Taggregation Engine</h1>
+    <p>Make a widget thang to put on yer tumblr to tell everybody what you're obsessed with this week.</p>
+    <p>Updates every time it's viewed. This server is tiny and free so if it breaks while I'm on vacation whoops</p>
+</div>
+<div class="container">
+    <div class="left">
+        {{ wtf.quick_form(form) }}
+    </div>
+    <div class="not-left">
+        <iframe src="{{ url_for('taggregator', username=u, color=c, height=h, width=w) }}"
+                frameBorder="0" scrolling="no"></iframe>
+        <p>Like it? Plop the code below somewhere on your blog or something!</p>
+        <p>(background is transparent for your theme's aesthetic needs)</p>
+        <textarea rows="4" cols="50">{{ iframe_code }}</textarea>
+    </div>
+</div>
+<!-- do I need these??? probably -->
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script crossorigin="anonymous" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js">
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 from app import app, db
-from flask import render_template, redirect, url_for, abort
+from flask import render_template, redirect, url_for, abort, jsonify
 from app.models import Chapter, Book
+from app.forms import TagForm
 
 from tumblrtaggin.taggregator import find_tags
 
@@ -121,19 +122,49 @@ def bookmark():
     return redirect(url_for('index'))
 
 
-@app.route('/taggregator/tumblr/<username>/<int:height>/<int:width>/<color>')
+# TODO: make color correspond to text color, not background color
+@app.route('/taggregator/tumblr/<username>/<int:height>/<int:width>/<color>/')
 def taggregator(username, height, width, color):
     """
     This is the cutest thing I've ever made, and I'm proud.
     :param username: tumblr username
     :param height: height of div
     :param width: width of div
-    :param color: background color
+    :param color: link color
     :return: an html page with your top 10 (or fewer) tumblr tags
     """
+    # TODO: Not this anymore
     top_tags = find_tags(username)
     return render_template("taggregator.html", username=username, top_tags=top_tags, height=height, width=width,
                            color=color)
+
+
+@app.route('/taggregator/tumblr/', methods=('GET', 'POST'))
+def taggremaker():
+    """
+    Page to generate taggregator iframe. Starts with example iframe for tumblr user airdeari.
+    Uses TagForm to make a new taggregation for the tumblr user and styling of choice.
+    :return: the page I just described
+    """
+    u = "airdeari"
+    c = "fffafb"
+    h = 200
+    w = 200
+    iframe_code = iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
+                  url_for('taggregator', username=u, color=c, height=h, width=w) +\
+                  '" frameBorder="0" scrolling="no"></iframe>'
+    f = TagForm(csrf_enabled=False)  # FIXME: or dont. fite me
+    if f.validate_on_submit():
+        u = f.username.data
+        c = f.color.data
+        h = f.height.data
+        w = f.width.data
+        iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
+                      url_for('taggregator', username=u, color=c, height=h,width=w) +\
+                      '" frameBorder="0" scrolling="no"></iframe>'
+        return render_template("tagremaker.html", form=f, u=u, c=c, w=w, h=h, iframe_code=iframe_code)
+        # TODO: I should have just made this form myself with JS probably, and it is definitely time for a break
+    return render_template("tagremaker.html", form=f, u=u, c=c, w=w, h=h, iframe_code=iframe_code)
 
 
 # did you know ctrl+? comments things in pycharm?? what a handy misplacement of fingers I just had
@@ -144,3 +175,19 @@ def taggregator(username, height, width, color):
 #            + url + "' height=500 width=500 scrolling='no' frameBorder=0></iframe>"
 #     return html
 
+
+# INVISIBLE AJAX PLACES
+
+@app.route("/_taggregator/tumblr/<username>")
+def retrieve_tags(username):
+    """
+    BY THE POWER OF AJAX I SHALL PERFORM ACTIONS IN THE BACKGROUND!
+    :param username: tumblr user to scrape
+    :return: json array of top tags in order
+    """
+    top_tags = find_tags(username)
+    tag_string = ""
+    for i in range(len(top_tags)):
+        tag_string += "<a href='http://"+username+".tumblr.com/tagged/"+top_tags[i]+"'>#"+top_tags[i]+"</a> "
+
+    return jsonify(tag_list=tag_string)

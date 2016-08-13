@@ -4,23 +4,45 @@
     <meta charset="UTF-8">
     <title>How utterly ludicrous. You've found my taggregator.</title>
 
+    <!-- TODO: use color to change text color, not bg color, and make bg transparent? -->
     <style>
+        body {
+            background: none transparent;
+        }
         .iframe {
             height: {{ height-16 }}px;
             width: {{ width-16 }}px;
-            background-color: {{ color }};
             font-family: "Tahoma", sans-serif;
             overflow: hidden;
-            padding: 0px 5px;
+            color: #{{ color }};
+        }
+        a {
+            color: #{{ color }};
         }
     </style>
 </head>
+
 <body>
+
 <div class="iframe">
-    <h4>{{ username }}'s latest trends</h4>
-{% for t in top_tags %}
-<a href="http://{{ username }}.tumblr.com/tagged/{{ t }}">#{{ t }}</a><br>
-{% endfor %}
+    <b>{{ username }}'s latest trends</b>
+    <p id="put_them_tags_here">loading...</p>
 </div>
+
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
+
+<script type=text/javascript>
+    // identify script root so that this can work while I'm testing as well as on the internet
+    $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
+
+    // I THINK this will just like... start??? when the page loads? TODO: make sure that's what this does
+    $.get( $SCRIPT_ROOT+"/_taggregator/tumblr/{{ username }}", function( data ) {
+        // delete the loading message by inserting new string from json
+        $("p#put_them_tags_here").html(data.tag_list)
+        return false;
+    });
+</script>
+
 </body>
 </html>
