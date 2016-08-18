@@ -57,6 +57,7 @@ def add_tags_to_dict(match, tag_dict):
     logging.debug(tags)
     for t in tags:
         t = t.strip()
+        t = t.lower()
         if t in tag_dict.keys():
             tag_dict[t] += 1
         else:
