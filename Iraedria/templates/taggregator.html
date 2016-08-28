@@ -19,14 +19,22 @@
         a {
             color: #{{ color }};
         }
+        .very-smol {
+            font-size: .6em;
+        }
     </style>
 </head>
 
 <body>
 
 <div class="iframe">
+    {% if username == "izzyv1o" %}
+    <b>known shitlord's latest trends</b>
+    {% else %}
     <b>{{ username }}'s latest trends</b>
+    {% endif %}
     <p id="put_them_tags_here">loading...</p>
+    <p class="very-smol"><a href="{{ url_for('taggremaker') }}" target="_blank">want your own?</a></p>
 </div>
 
 
@@ -36,7 +44,6 @@
     // identify script root so that this can work while I'm testing as well as on the internet
     $SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
 
-    // I THINK this will just like... start??? when the page loads? TODO: make sure that's what this does
     $.get( $SCRIPT_ROOT+"/_taggregator/tumblr/{{ username }}", function( data ) {
         // delete the loading message by inserting new string from json
         $("p#put_them_tags_here").html(data.tag_list)

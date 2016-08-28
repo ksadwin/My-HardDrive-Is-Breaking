@@ -71,7 +71,7 @@ def make_tag_dict(soup):
     :return: dictionary of tags, e.g. {"#pokemon" : 3, "#ztd" : 10}
     :raises: IndexError (if empty blog is found)
     """
-    matches = soup.find_all(class_="post_glass")  # TODO: does every post have this class...? let's hope
+    matches = soup.find_all(class_="post_glass")
     logging.debug(matches)
 
     # three conditions must be met to continue the loop:

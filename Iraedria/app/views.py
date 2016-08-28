@@ -150,7 +150,7 @@ def taggremaker():
     u = "airdeari"
     c = "fffafb"
     h = 200
-    w = 200
+    w = 300
     iframe_code = iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
                   url_for('taggregator', username=u, color=c, height=h, width=w) +\
                   '" frameBorder="0" scrolling="no"></iframe>'
@@ -161,7 +161,7 @@ def taggremaker():
         h = f.height.data
         w = f.width.data
         iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
-                      url_for('taggregator', username=u, color=c, height=h,width=w) +\
+                      url_for('taggregator', username=u, color=c, height=h, width=w) +\
                       '" frameBorder="0" scrolling="no"></iframe>'
         return render_template("tagremaker.html", form=f, u=u, c=c, w=w, h=h, iframe_code=iframe_code)
         # I should have just made this form myself with JS probably
