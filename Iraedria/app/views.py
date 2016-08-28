@@ -2,6 +2,7 @@ from app import app, db
 from flask import render_template, redirect, url_for, abort, jsonify
 from app.models import Chapter, Book
 from app.forms import TagForm
+from urllib.parse import quote_plus
 
 from tumblrtaggin.taggregator import find_tags
 
@@ -163,17 +164,17 @@ def taggremaker():
                       url_for('taggregator', username=u, color=c, height=h,width=w) +\
                       '" frameBorder="0" scrolling="no"></iframe>'
         return render_template("tagremaker.html", form=f, u=u, c=c, w=w, h=h, iframe_code=iframe_code)
-        # TODO: I should have just made this form myself with JS probably, and it is definitely time for a break
+        # I should have just made this form myself with JS probably
     return render_template("tagremaker.html", form=f, u=u, c=c, w=w, h=h, iframe_code=iframe_code)
 
 
 # did you know ctrl+? comments things in pycharm?? what a handy misplacement of fingers I just had
-# @app.route("/test")
-# def test():
-#     url = url_for('taggregator', username="airdeari", height=500, width=500, color="magenta")
-#     html = "<p>with any luck here's an iframe</p><iframe src='"\
-#            + url + "' height=500 width=500 scrolling='no' frameBorder=0></iframe>"
-#     return html
+@app.route("/test")
+def test():
+    url = url_for('taggregator', username="airdeari", height=500, width=500, color="ff0000")
+    html = "<p>with any luck here's an iframe</p><iframe src='"\
+           + url + "' height=500 width=500 scrolling='no' frameBorder=0></iframe>"
+    return html
 
 
 # INVISIBLE AJAX PLACES
@@ -188,6 +189,14 @@ def retrieve_tags(username):
     top_tags = find_tags(username)
     tag_string = ""
     for i in range(len(top_tags)):
-        tag_string += "<a href='http://"+username+".tumblr.com/tagged/"+top_tags[i]+"'>#"+top_tags[i]+"</a> "
+        words_in_tag = top_tags[i].split()
+        url_safe_tag = ""
+        for w in words_in_tag:
+            url_safe_tag += quote_plus(w) + "-"
+        # remove trailing hyphen
+        url_safe_tag = url_safe_tag[:-1]
+
+        tag_string += "<a href='http://"+username+".tumblr.com/tagged/"+url_safe_tag+"' target='_blank'>#"+top_tags[i]\
+                      + "</a> "
 
     return jsonify(tag_list=tag_string)

@@ -98,7 +98,7 @@ def find_tags(username):
     """
     the whole shebang
     :param username: string tumblr username
-    :return:
+    :return: list (max ten) of most popular tags in order from high to low
     """
     try:
         archive_soup = get_archive(username)
@@ -120,7 +120,7 @@ def find_tags(username):
 def find_tags_test():
     """
     Uses a predownloaded html page of airdeari's tumblr (from 8/8/2016) while airdeari tests his code
-    :return:
+    :return: none (prints tags to console)
     """
     logging.info("Performing test run using static html file")
     f = open("archive.html", "r")
