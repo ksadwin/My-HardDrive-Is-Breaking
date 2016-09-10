@@ -3,22 +3,7 @@ from flask_login import AnonymousUserMixin
 from flask import request, url_for
 
 
-# FIXME: Eliminate the interface because it didn't end up working
 # TODO: Implement togglable profile privacy
-
-"""
-class IUser(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    flags = db.Column(db.Integer)
-    ip = db.Column(db.String(32))
-    is_active = db.Column(db.Boolean)
-    is_authenticated = db.Column(db.Boolean)
-    is_anonymous = db.Column(db.Boolean)
-
-    def __init__(self):
-        self.flags = 0
-"""
 
 
 class User(db.Model):
@@ -42,7 +27,7 @@ class User(db.Model):
         self.password = password
 
         no_photo = False
-        if url == "":  # no photo given. TODO?: check photo validity here
+        if url == "":  # no photo given. FIXME: check photo validity here. alternatively: do a cool JS thing
             self.photo_url = url_for('static', filename='default.jpg')
             no_photo = True
         else:  # photo given

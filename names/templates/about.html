@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+<h2>What the heck is NameChanger?</h2>
+
+<p>At NameChanger, you can put a picture of your face and a little blurb about yourself on the Internet to crowdsource ideas for a new name.</p>
+<p>Click the NameChanger link on the left side of the bar at the top to be brought to a random user's page. Skip past them using the arrow button if you can't think of a name. If you keep seeing the same users over and over again, they're probably the last users left on the whole website.</p>
+<p><b>Suggestions mode:</b> Users and guests can type in suggestions for names if you've got no idea.</p>
+<img class="example" src="{{ url_for('static', filename='img/suggestname.png') }}">
+<p><b>Selection mode:</b> After you've gotten a few suggestions you like (or after you've submitted the names you're thinking of), you can navigate to the Settings page to change the voting method.</p>
+<img class="example" src="{{ url_for('static', filename='img/deletename.png') }}">
+<p>First be sure to clear out any names you don't really like. Who could think that Phillip is a good name for you? Remove it by clicking the X.</p>
+<p>(If a name is offensive, please report it. There is a flagging system. If you're having a problem, please contact me - klizzinator@gmail.com.)</p>
+<img class="example" src="{{ url_for('static', filename='img/toggleselectionswithdeletedname.png') }}">
+<p>Now that Phillip has been deleted, click the link above to switch over to the selection-based voting system. That's it! All done.</p>
+<img class="example" src="{{ url_for('static', filename='img/selectname.png') }}">
+<p>Users will now be able to select from a list of your chosen names. You'll be able to see the tally of votes on your Settings page.</p>
+<h4>Hope you have a good time!</h4>
+<br /><br /><br /><br />
+
+{% endblock %}

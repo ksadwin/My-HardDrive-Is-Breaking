@@ -1,56 +1,32 @@
-from app import app, db, login_manager
+from app import app, db, login_manager, admin
 from app.models import Name, Vote, User, Anon
 from app.forms import SignUpForm, LoginForm, SuggestForm, SelectForm
 from flask import render_template, redirect, url_for, flash, jsonify, session
 from flask_login import login_user, current_user, login_required, logout_user
 import random
 from passlib.apps import custom_app_context as pwd_context
+from flask_admin.contrib.sqla import ModelView
 
 
 login_manager.login_view = "signin"
 login_manager.anonymous_user = Anon
 
 
+# ADMIN VIEWS
+
+
+class NameChangerModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_active and current_user.username == "sadmin"
+
+
+admin.add_view(NameChangerModelView(User, db.session))
+admin.add_view(NameChangerModelView(Name, db.session))
+admin.add_view(NameChangerModelView(Vote, db.session))
+
+
 # NON-VIEW FUNCTIONS
-
-"""
-def public_logged_in(u):
-    if u.suggestions:
-        f = SuggestForm()
-        if f.validate_on_submit():
-            if current_user.is_active():
-                suggester = current_user
-            else:
-                suggester = None
-                session[u.username] = True
-            n = Name(f.name.data, u, suggester)
-            v = Vote(n, u, suggester)
-
-            db.session.add(n)
-            db.session.add(v)
-            db.session.commit()
-    else:
-        names = Name.query.filter_by(userID=u.id).order_by('score').all()
-        f = SelectForm()
-        f.name.choices = [(n.id, n.name) for n in names]
-        if f.validate_on_submit():
-            # this might be wonky, in ithacamusic it somehow understood the object from the id automatically??
-            n = Name.query.get(f.name.data)
-            n.score += 1
-            if current_user.is_active():
-                suggester = current_user
-            else:
-                suggester = None
-                session[u.username] = True
-            v = Vote(n, u, suggester)
-            db.session.add(v)
-            db.session.commit()
-    return render_template("index.html", form=f, user=u)
-
-def create_session():
-    if 'visited' not in session.keys():
-        session['visited'] = list()
-"""
 
 
 def delete_name_by_id(name_id, delete_votes=True):
@@ -73,7 +49,7 @@ def print_visited():
 
 
 def can_vote(u):
-    if current_user.is_anonymous():
+    if not current_user.is_active:
         if u.username not in session.keys():
             app.logger.debug(u)
             return True
@@ -96,7 +72,7 @@ def generate_valid_user():
 
 
 def validate_suggest_form(f, u):
-    if current_user.is_active():
+    if current_user.is_active:
         suggester = current_user
     else:
         suggester = None
@@ -110,7 +86,6 @@ def validate_suggest_form(f, u):
 
 
 def validate_select_form(f, u):
-    # this might be wonky, in ithacamusic it somehow understood the object from the id automatically??
     n = Name.query.get(f.name.data)
     n.score += 1
     if current_user.is_active():
@@ -127,7 +102,7 @@ def validate_select_form(f, u):
 
 @app.route('/signin/', methods=('GET', 'POST'))
 def signin():
-    if current_user.is_active():
+    if current_user.is_active:
         flash("You are already signed in.")
         return redirect(url_for("index"))
     signup = SignUpForm()
@@ -177,25 +152,13 @@ def index():
                                                      "student.")
     return redirect(url_for('public_profile', name=u.username))
 
-"""
-    if u.suggestions:
-        f = SuggestForm()
-        if f.validate_on_submit():
-            validate_suggest_form(f, u)
-            return redirect(url_for('private_profile'))
-    else:
-        names = Name.query.filter_by(userID=u.id).order_by('score').all()
-        f = SelectForm()
-        f.name.choices = [(n.id, n.name) for n in names]
-        if f.validate_on_submit():
-            validate_select_form(f, u)
-            return redirect(url_for('private_profile'))
-    app.logger.debug("how many times am i serving and why")
-    return render_template("index.html", form=f, user=u)
-"""
+
+@app.route('/about/')
+def about():
+    return render_template("about.html")
 
 
-@app.route('/<name>/', methods=('GET', 'POST'))
+@app.route('/user/<name>/', methods=('GET', 'POST'))
 def public_profile(name):
     user = User.query.filter_by(username=name).first()
     if user is None:
