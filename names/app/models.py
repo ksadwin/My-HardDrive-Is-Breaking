@@ -20,6 +20,7 @@ class User(db.Model):
     photo_url = db.Column(db.String(128))
     suggestions = db.Column(db.Boolean)
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
+    private = db.Column(db.Boolean)
 
     def __init__(self, name, password, url, about):
         self.flags = 0
@@ -45,6 +46,7 @@ class User(db.Model):
         self.active = True
         self.authenticated = True
         self.anonymous = False
+        self.private = False
 
     def is_active(self):
         return self.active

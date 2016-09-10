@@ -50,7 +50,7 @@ def print_visited():
 
 def can_vote(u):
     if not current_user.is_active:
-        if u.username not in session.keys():
+        if u.username not in session.keys() and not u.private:
             app.logger.debug(u)
             return True
     elif Vote.query.filter_by(voterID=current_user.id, userID=u.id).first() is None:
@@ -60,9 +60,11 @@ def can_vote(u):
 
 
 def generate_valid_user():
-    users = list(User.query.filter_by(active=True))
+    if current_user.is_active:
+        users = list(User.query.filter_by(active=True))
+    else:
+        users = list(User.query.filter_by(active=True, private=False))
     while users:
-        app.logger.debug("please save me from my personal hell")
         u = random.choice(users)
         if can_vote(u):
             return u
@@ -163,11 +165,11 @@ def public_profile(name):
     user = User.query.filter_by(username=name).first()
     if user is None:
         # FIXME: This message literally shows up on every page??? make it stop?????????????/
-        # flash("User not found.")
+        flash("User not found.")
         return redirect(url_for("index"))
     elif user != current_user:
         if not can_vote(user):
-            flash("You've already voted on that user's name. Two votes is... too much power, don't you think?")
+            flash("You cannot vote on this user's profile. It may be private, or you may have already voted.")
             return redirect(url_for("index"))
     if user.suggestions:
         f = SuggestForm()
@@ -272,6 +274,19 @@ def toggle_suggestions():
         db.session.delete(v)
     db.session.commit()
     return jsonify(s=user.suggestions)
+
+
+@app.route("/_toggle_privacy/")
+@login_required
+def toggle_privacy():
+    # current_user is a copy, find the original
+    user = User.query.get(current_user.id)
+    if user.private:
+        user.private = False
+    else:
+        user.private = True
+    db.session.commit()
+    return jsonify(s=user.private)
 
 
 @app.route("/_delete-<int:name_id>/")

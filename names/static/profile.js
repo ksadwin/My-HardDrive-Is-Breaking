@@ -6,12 +6,26 @@ $(function() {
     $('a#toggle_suggestions').on('click', function() {
       $.get( $SCRIPT_ROOT+"/_toggle_suggestions", function( data ) {
           if (data.s) {
-              $("p#toggle_status").text("Currently, logged-in users can type suggestions for your name.");
-              $('a#toggle_suggestions').text("Click here to allow users and guests to select a choice from your suggested names.");
+              $("p#toggle_status").text("Currently, users can type suggestions for your name.");
+              $('a#toggle_suggestions').text("Click here to allow users to select a choice from your suggested names.");
           }
           else {
-              $("p#toggle_status").text("Currently, users and guests can select a choice from your suggested names.");
-              $('a#toggle_suggestions').text("Click here to allow logged-in users to type suggestions for your name.");
+              $("p#toggle_status").text("Currently, users can select a choice from your suggested names.");
+              $('a#toggle_suggestions').text("Click here to allow users to type suggestions for your name.");
+          }
+          return false;
+      });
+    });
+
+    $('a#toggle_privacy').on('click', function() {
+      $.get( $SCRIPT_ROOT+"/_toggle_privacy", function( data ) {
+          if (data.s) {
+              $("p#current_privacy").text("Currently, only logged-in users can view your profile.");
+              $('a#toggle_privacy').text("Click here to allow anonymous users to view your profile as well.");
+          }
+          else {
+              $("p#current_privacy").text("Currently, anonymous users can view your profile.");
+              $('a#toggle_privacy').text("Click here to only permit logged-in users to view your profile.");
           }
           return false;
       });
