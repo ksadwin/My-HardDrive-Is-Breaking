@@ -1,6 +1,6 @@
 from app import app, db, login_manager, admin
 from app.models import Name, Vote, User, Anon
-from app.forms import SignUpForm, LoginForm, SuggestForm, SelectForm
+from app.forms import SignUpForm, LoginForm, SuggestForm, SelectForm, ChangeDetailsForm, ChangePasswordForm
 from flask import render_template, redirect, url_for, flash, jsonify, session
 from flask_login import login_user, current_user, login_required, logout_user
 import random
@@ -123,7 +123,6 @@ def signin():
             else:
                 flash("Wrong password.")
         else:
-            # FIXME: this message pops up when you sign up correctly
             flash('Never heard of you.')
     if signup.validate_on_submit():
         username = signup.username_s.data.lower()
@@ -193,26 +192,30 @@ def private_profile():
     names = Name.query.filter_by(userID=current_user.get_id()).all()
 
     # TODO: implement a new form to change account details you lazy trashbag
-    """
-    s = SignUpForm()
-    # current_user is a copy, find the original
-    user = User.query.get(current_user.id)
-    s.username.data = user.username
-    s.about.data = user.about
-    s.url.data = user.photo_url
-    if s.validate_on_submit():
-        if pwd_context.verify(s.password.data, user.password):
-            user.username = s.username.data
-            user.photo_url = s.url.data
-            user.about = s.about.data
+    form_d = ChangeDetailsForm(csrf_enabled=False)
+    form_p = ChangePasswordForm()
+    if form_p.validate_on_submit():
+        if pwd_context.verify(form_p.current_password.data, current_user.password):
+            user = User.query.get(current_user.id)
+            user.password = pwd_context.encrypt(form_p.new_password.data)
             db.session.commit()
             flash("Changes saved.")
             return redirect(url_for("private_profile"))
         else:
             flash("Incorrect password.")
             return redirect(url_for("private_profile"))
-    """
-    return render_template("profile.html", names=names)
+    if form_d.validate_on_submit():
+        user = User.query.get(current_user.id)
+        if form_d.about.data != "":
+            user.about = form_d.about.data
+        app.logger.debug("result: "+user.about)
+        if form_d.url.data != "":
+            user.photo_url = form_d.url.data
+        db.session.commit()
+        flash("Changes saved.")
+        return redirect(url_for("private_profile"))
+
+    return render_template("profile.html", names=names, form_d=form_d, form_p=form_p)
 
 
 @app.route('/cookies/')

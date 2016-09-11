@@ -34,3 +34,17 @@ class SelectForm(Form):
     submit = SubmitField("Submit")
 
 
+class ChangePasswordForm(Form):
+    current_password = PasswordField("Current Password", validators=[validators.required()])
+    new_password = PasswordField("New Password", validators=[validators.required(), validators.length(min=6, max=48)])
+    submit_p = SubmitField("Change Password")
+
+
+class ChangeDetailsForm(Form):
+    about = TextAreaField("About", description="Anything you'd like people to know about you? Gender, age, last name, "
+                                               "what the first letter should be, etc.")
+    url = StringField("Photo", description="Paste the URL of the photo you'd like to use. (I am but a simple college "
+                                           "student, I do not want to host your photos.)")
+    submit_d = SubmitField("Change Details")
+
+

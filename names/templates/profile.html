@@ -9,36 +9,43 @@
 {% block page_content %}
     <h1>Your Account</h1>
 
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Toggle profile privacy -->
+            <h3>Toggle privacy</h3>
+            {% if current_user.private %}
+                <p id="current_privacy">Currently, only logged-in users can view your profile.</p>
+                <p><a id="toggle_privacy">
+                    Click here to allow anonymous users to view your profile as well.
+                </a></p>
+            {% else %}
+                <p id="current_privacy">Currently, anonymous users can view your profile.</p>
+                <p><a id="toggle_privacy">
+                    Click here to only permit logged-in users to view your profile.
+                </a></p>
+            {% endif %}
+            <!-- end privacy toggle -->
 
-    <!-- Toggle profile privacy -->
-    <h3>Toggle privacy</h3>
-    {% if current_user.private %}
-        <p id="current_privacy">Currently, only logged-in users can view your profile.</p>
-        <p><a id="toggle_privacy">
-            Click here to allow anonymous users to view your profile as well.
-        </a></p>
-    {% else %}
-        <p id="current_privacy">Currently, anonymous users can view your profile.</p>
-        <p><a id="toggle_privacy">
-            Click here to only permit logged-in users to view your profile.
-        </a></p>
-    {% endif %}
-    <!-- end privacy toggle -->
+        </div>
+        <div class="col-md-6">
+            <!-- Toggle suggestions/selections. -->
+            <h3>Toggle voting</h3>
+            {% if current_user.suggestions %}
+                <p id="toggle_status">Currently, users can type suggestions for your name.</p>
+                <p><a id="toggle_suggestions">
+                    Click here to allow users to select a choice from your suggested names.
+                </a></p>
+            {% else %}
+                <p id="toggle_status">Currently, users can select a choice from your suggested names.</p>
+                <p><a id="toggle_suggestions">
+                    Click here to allow users to type suggestions for your name.
+                </a></p>
+            {% endif %}
+            <!-- end suggestions toggle -->
 
-    <!-- Toggle suggestions/selections. -->
-    <h3>Toggle voting</h3>
-    {% if current_user.suggestions %}
-        <p id="toggle_status">Currently, users can type suggestions for your name.</p>
-        <p><a id="toggle_suggestions">
-            Click here to allow users to select a choice from your suggested names.
-        </a></p>
-    {% else %}
-        <p id="toggle_status">Currently, users can select a choice from your suggested names.</p>
-        <p><a id="toggle_suggestions">
-            Click here to allow users to type suggestions for your name.
-        </a></p>
-    {% endif %}
-    <!-- end suggestions toggle -->
+        </div>
+    </div>
+
 
     <!-- See suggested names. -->
     <h3>Suggested names</h3>
@@ -54,12 +61,28 @@
     </div>
     <!-- end suggested names -->
 
+    <div class="row">
+        <div class="col-md-5">
+            <!-- Change photo/about. TODO: what you promised -->
+            <h3>Change details</h3>
+            <p>Look, long story short, this form is a piece of trash, but I've done what I can with the tools at hand.
+                <b>Only fill in the fields you want to change, or the previous content will be lost forever.</b></p>
+            {{ wtf.quick_form(form_d) }}
+            <!-- end photo/about -->
 
-    <!-- Change photo/about. TODO: what you promised -->
-    <h3>Change details</h3>
-    <p>What's that? You wanted to change your account details? That sounds really hard.
-        Maybe if you come back much later, I'll have figured something out.</p>
-    <!-- end photo/about -->
+        </div>
+
+        <div class="col-md-4 col-md-offset-1">
+            <!-- Change password. -->
+            <h3>Change password</h3>
+            <p>To be frank, I really have no idea why you'd want to do this.</p>
+            {{ wtf.quick_form(form_p) }}
+            <!-- end password -->
+
+        </div>
+
+    </div>
+
 
 
     <!-- Delete account. -->

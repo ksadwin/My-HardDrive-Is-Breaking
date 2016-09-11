@@ -15,8 +15,8 @@ class User(db.Model):
     anonymous = db.Column(db.Boolean)
 
     username = db.Column(db.String(32))
-    password = db.Column(db.String(128))
-    photo_url = db.Column(db.String(128))
+    password = db.Column(db.String(48))
+    photo_url = db.Column(db.String(256))
     suggestions = db.Column(db.Boolean)
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
     private = db.Column(db.Boolean)
