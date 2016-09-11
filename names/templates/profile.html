@@ -51,13 +51,17 @@
     <h3>Suggested names</h3>
     <p>Remove unwanted names by clicking the X. No one but you can see these names unless you make them available for public voting (toggle above)</p>
     <div class="row">
-    {% for n in names %}
-        <div class="col-lg-3" id="{{ n.id }}">
-            <p><b>{{ n.name }} &nbsp; <a class="delete" id="delete-{{ n.id }}">&times;</a></b></p>
-            <p>Votes: {{ n.score }}</p>
-            <p><a class="report" id="report-{{ n.id }}"><i>Report this name as offensive</i></a></p>
-        </div>
-    {% endfor %}
+        {% if names == [] %}
+        <p><i>You don't have any names yet! You can suggest some for yourself on your profile if you're feeling particularly desperate.</i></p>
+        {% else %}
+            {% for n in names %}
+                <div class="col-md-3" id="{{ n.id }}">
+                    <p><b>{{ n.name }} &nbsp; <a class="delete" id="delete-{{ n.id }}">&times;</a></b></p>
+                    <p>Votes: {{ n.score }}</p>
+                    <p><a class="report" id="report-{{ n.id }}"><i>Report this name as offensive</i></a></p>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
     <!-- end suggested names -->
 
