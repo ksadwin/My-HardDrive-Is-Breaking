@@ -3,29 +3,13 @@ from flask_login import AnonymousUserMixin
 from flask import request, url_for
 
 
-# FIXME: Eliminate the interface because it didn't end up working
 # TODO: Implement togglable profile privacy
-
-"""
-class IUser(db.Model):
-    __tablename__ = 'user'
-    id = db.Column(db.Integer, primary_key=True)
-    flags = db.Column(db.Integer)
-    ip = db.Column(db.String(32))
-    is_active = db.Column(db.Boolean)
-    is_authenticated = db.Column(db.Boolean)
-    is_anonymous = db.Column(db.Boolean)
-
-    def __init__(self):
-        self.flags = 0
-"""
 
 
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     flags = db.Column(db.Integer)
-    ip = db.Column(db.String(32))
     active = db.Column(db.Boolean)
     authenticated = db.Column(db.Boolean)
     anonymous = db.Column(db.Boolean)
@@ -35,14 +19,15 @@ class User(db.Model):
     photo_url = db.Column(db.String(128))
     suggestions = db.Column(db.Boolean)
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
+    private = db.Column(db.Boolean)
 
-    def __init__(self, name, password, url, about):
+    def __init__(self, name, password, url="", about=""):
         self.flags = 0
-        self.username = name
+        self.username = name.lower()
         self.password = password
 
         no_photo = False
-        if url == "":  # no photo given. TODO?: check photo validity here
+        if url == "":  # no photo given. FIXME: check photo validity here. alternatively: do a cool JS thing
             self.photo_url = url_for('static', filename='default.jpg')
             no_photo = True
         else:  # photo given
@@ -60,6 +45,7 @@ class User(db.Model):
         self.active = True
         self.authenticated = True
         self.anonymous = False
+        self.private = False
 
     def is_active(self):
         return self.active

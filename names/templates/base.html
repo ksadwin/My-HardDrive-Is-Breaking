@@ -2,6 +2,11 @@
 
 {% block title %}NameChanger{% block subtitle %}{% endblock %}{% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css">
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js"></script>
@@ -24,14 +29,22 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                {% if current_user.is_active() %}
+                {% if current_user.is_active %}
                     <li><a href="{{ url_for('public_profile', name=current_user.username) }}">{{ current_user.username }}'s Profile</a></li>
                     <li><a href="{{ url_for('private_profile') }}">Settings</a></li>
                     <li><a href="{{ url_for('logout') }}">Log Out</a></li>
                 {% else %}
                     <li><a href="{{ url_for('signin') }}">Sign In</a></li>
                 {% endif %}
+                    <li><a href="{{ url_for('about') }}">About NameChanger</a></li>
                 {% block links %}{% endblock %}
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a data-toggle="modal" data-target="#author">
+                        About the creator
+                    </a>
+                </li>
             </ul>
         </div>
     </div>
@@ -47,5 +60,25 @@
     </div>
     {% endfor %}
     {% block page_content %}{% endblock %}
+</div>
+<div class="modal fade" id="author" tabindex="-1" role="dialog" aria-labelledby="authorLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title" id="authorLabel">About Sadwin</h4>
+      </div>
+      <div class="modal-body">
+          <img class="img-rounded" id="picture-of-me" src="http://ksadwin.com/img/profile.png">
+        <p><a href="http://ksadwin.com">Sadwin</a> is a nonbinary computer scientist (ironically very good with binary).</p>
+        <p>If you would like to contribute to server costs - about $5 a month so don't sweat it - feel free to donate to Sadwin's PayPal at klizzinator@gmail.com. Incidentally, you may also direct any comments or concerns about the website to this address. You can also send lucrative software engineering job offers to this address ha ha aha ha please i need a job</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

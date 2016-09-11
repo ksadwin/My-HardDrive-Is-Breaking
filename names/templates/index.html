@@ -1,11 +1,6 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block styles %}
-    {{ super() }}
-    <link href="{{ url_for('static', filename='index.css') }}" rel="stylesheet" type="text/css">
-{% endblock %}
-
 {% block scripts %}
     {{ super() }}
     <script type=text/javascript>
@@ -17,15 +12,24 @@
 {% endblock %}
 
 {% block page_content %}
-        <div id="photo">
-            <img src="{{ user.photo_url }}" alt="There should be a photo of someone's beautiful face here." />
+    <div class="row">
+        <div class="col-md-6">
+            <div id="photo">
+                <img class="img-responsive" src="{{ user.photo_url }}" alt="There should be a photo of someone's beautiful face here." />
+            </div>
         </div>
+        <div class="col-md-3">
             <div id="blurb">
                 <p>{{ user.about }}</p>
             </div>
+        </div>
+        <div class="col-md-3">
             <div id="votes">
                 {{ wtf.quick_form(form) }}
             </div>
+        </div>
         <div id="next"><a href="{{ url_for('index') }}"><i class="glyphicon glyphicon-circle-arrow-right"></i></a></div>
+
+    </div>
 
 {% endblock %}
