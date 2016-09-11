@@ -22,7 +22,7 @@ class User(db.Model):
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
     private = db.Column(db.Boolean)
 
-    def __init__(self, name, password, url, about):
+    def __init__(self, name, password, url="", about=""):
         self.flags = 0
         self.username = name
         self.password = password
