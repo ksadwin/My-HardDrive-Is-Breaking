@@ -90,7 +90,7 @@ def validate_suggest_form(f, u):
 def validate_select_form(f, u):
     n = Name.query.get(f.name.data)
     n.score += 1
-    if current_user.is_active():
+    if current_user.is_active:
         suggester = current_user
     else:
         suggester = None
@@ -110,11 +110,11 @@ def signin():
     signup = SignUpForm()
     login = LoginForm()
     if login.validate_on_submit():
-        username = login.username_l.data
+        username = login.username_l.data.lower()
         password = login.password_l.data
         u = User.query.filter_by(username=username).first()
         if u:
-            if not u.is_active():
+            if not u.is_active:
                 flash("This account has been deactivated because of too many complaints from users.")
             elif pwd_context.verify(password, u.password):
                 login_user(u)
@@ -126,13 +126,13 @@ def signin():
             # FIXME: this message pops up when you sign up correctly
             flash('Never heard of you.')
     if signup.validate_on_submit():
-        username = signup.username_s.data
+        username = signup.username_s.data.lower()
         password = pwd_context.encrypt(signup.password_s.data)
-        about = signup.about_s.data
+        blurb = signup.about_s.data
         url = signup.url_s.data
         badu = User.query.filter_by(username=username).first()
         if not badu:
-            u = User(username, password, url, about)
+            u = User(username, password, url, blurb)
             db.session.add(u)
             db.session.commit()
             login_user(u)
@@ -162,9 +162,9 @@ def about():
 
 @app.route('/user/<name>/', methods=('GET', 'POST'))
 def public_profile(name):
+    name = name.lower()
     user = User.query.filter_by(username=name).first()
     if user is None:
-        # FIXME: This message literally shows up on every page??? make it stop?????????????/
         flash("User not found.")
         return redirect(url_for("index"))
     elif user != current_user:

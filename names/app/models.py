@@ -10,7 +10,6 @@ class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
     flags = db.Column(db.Integer)
-    ip = db.Column(db.String(32))
     active = db.Column(db.Boolean)
     authenticated = db.Column(db.Boolean)
     anonymous = db.Column(db.Boolean)
@@ -24,7 +23,7 @@ class User(db.Model):
 
     def __init__(self, name, password, url="", about=""):
         self.flags = 0
-        self.username = name
+        self.username = name.lower()
         self.password = password
 
         no_photo = False
