@@ -301,7 +301,7 @@ def delete_cookies():
     :return: well now I'm going to return a joke page that contains a screenshot of this function
     """
     # session.clear()
-    return url_for("static", filename="img/imtrash.png")
+    return redirect(url_for("static", filename="img/imtrash.png"))
 
 
 @login_manager.user_loader
