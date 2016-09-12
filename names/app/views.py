@@ -16,6 +16,8 @@ login_manager.anonymous_user = Anon
 
 
 class NameChangerModelView(ModelView):
+    column_exclude_list = ['password', 'about', 'photo_url']
+    column_display_pk = True
 
     def is_accessible(self):
         """
