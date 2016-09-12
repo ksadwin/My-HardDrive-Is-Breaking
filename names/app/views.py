@@ -69,13 +69,17 @@ def can_vote(u):
     Determine whether or not current_user may vote on user u, based on whether current_user is anonymous or active, if
     u is private, or if current_user has voted on u previously.
     :param u: User potentially being voted on by current_user
-    :return: True if current_user can vote on u, False otherwise
+    :return: True if current_user can vote on u, False otherwise. Always True for sadmin.
     """
     if not current_user.is_active:
-        if u.username not in session.keys() and not u.private:
+        if u.username not in session.keys() and not u.private and u.active:
             app.logger.debug(u)
             return True
-    elif Vote.query.filter_by(voterID=current_user.id, userID=u.id).first() is None:
+    elif current_user.username == "sadmin":
+        if not u.active:
+            flash("This user has been deactivated.")
+        return True
+    elif Vote.query.filter_by(voterID=current_user.id, userID=u.id).first() is None and u.active:
         app.logger.debug(u)
         return True
     return False
@@ -223,7 +227,8 @@ def public_profile(name):
         return redirect(url_for("index"))
     elif user != current_user:
         if not can_vote(user):
-            flash("You cannot vote on this user's profile. It may be private, or you may have already voted.")
+            flash("You cannot vote on this user's profile. It may be private, deactivated, or you may have already "
+                  "voted.")
             return redirect(url_for("index"))
     if user.suggestions:
         f = SuggestForm()
