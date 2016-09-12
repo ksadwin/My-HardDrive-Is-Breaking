@@ -3,9 +3,6 @@ from flask_login import AnonymousUserMixin
 from flask import request, url_for
 
 
-# TODO: Implement togglable profile privacy
-
-
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
@@ -15,7 +12,7 @@ class User(db.Model):
     anonymous = db.Column(db.Boolean)
 
     username = db.Column(db.String(32))
-    password = db.Column(db.String(48))
+    password = db.Column(db.String(128))
     photo_url = db.Column(db.String(256))
     suggestions = db.Column(db.Boolean)
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info

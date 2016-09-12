@@ -1,6 +1,6 @@
 import os
 import unittest
-from app import app, db
+from app import app, db, views
 from config import basedir
 from app.models import User, Vote, Name
 
@@ -20,6 +20,8 @@ class NameChangerTestCase(unittest.TestCase):
     def tearDown(self):
         db.session.remove()
         db.drop_all()
+
+    # non-test facility functions
 
     def create_user(self, context):
         u = User("testuser"+context, "testpassword", "testabout", "testphoto")
@@ -46,10 +48,30 @@ class NameChangerTestCase(unittest.TestCase):
     def logout(self):
         return self.app.get('/logout/', follow_redirects=True)
 
+    # TESTS
+
     def test_about(self):
         request = self.app.get('/about/')
         page = request.data.decode('utf-8')
         self.assertIn('What the heck is NameChanger?', page)
+
+    def test_delete_user(self):
+        self.create_user("delete_user1")
+        self.create_user("delete_user2")
+        u1 = User.query.filter_by(username="testuserdelete_user1").first()
+        u2 = User.query.filter_by(username="testuserdelete_user2").first()
+        self.create_name(u1, u2, "bob")
+        self.create_name(u2, u1, "gary")
+        nfor1 = Name.query.filter_by(name="bob").first()
+        nfrom1 = Name.query.filter_by(name="gary").first()
+        self.create_vote(u1, u2, nfor1)
+        self.create_vote(u2, u1, nfrom1)
+
+        nfor1_id = nfor1.id
+        views.delete_name_by_id(nfor1_id)
+        self.assertIsNone(Vote.query.filter_by(nameID=nfor1_id).first())  # have to say .first() to get a NoneType
+
+        # TODO: solve the login mystery so that you might test delete_account()
 
     def test_profile(self):
         self.create_user("profile")
@@ -82,19 +104,30 @@ class NameChangerTestCase(unittest.TestCase):
 
         # TODO: test privacy with logged-in user once you figure out how to log in
 
-    # def test_delete_user(self):
-    #     self.create_user("delete_user1")
-    #     self.create_user("delete_user2")
-    #     u1 = User.query.filter_by(username="testuserdelete_user1").first()
-    #     u2 = User.query.filter_by(username="testuserdelete_user2").first()
-    #     self.create_name(u1, u2, "bob")
-    #     self.create_name(u2, u1, "gary")
-    #     nfor1 = Name.query.filter_by(name="bob").first()
-    #     nfrom1 = Name.query.filter_by(name="gary").first()
-    #     self.create_vote(u1, u2, nfor1)
-    #     self.create_vote(u2, u1, nfrom1)
-    #     # TODO: just kidding i need to be logged in to actually test the delete page
-    #     # FIXME: once I figure out logins, get rid of the unsightly way of creating these votes. use forms.
+    def test_login_only_views(self):
+        request = self.app.get("/profile/", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
+
+        request = self.app.get("/logout/", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
+
+        request = self.app.get("/_toggle_privacy/", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
+
+        request = self.app.get("/_toggle_suggestions", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
+
+        request = self.app.get("/_delete-1/", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
+
+        request = self.app.get("/_report-1/", follow_redirects=True)
+        page = request.data.decode('utf-8')
+        self.assertIn("Please log in to access this page.", page)
 
     # def test_login(self):
     #

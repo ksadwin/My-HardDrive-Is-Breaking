@@ -55,7 +55,7 @@
         <p><i>You don't have any names yet! You can suggest some for yourself on your profile if you're feeling particularly desperate.</i></p>
         {% else %}
             {% for n in names %}
-                <div class="col-md-3" id="{{ n.id }}">
+                <div class="col-md-3 col-sm-6" id="{{ n.id }}">
                     <p><b>{{ n.name }} &nbsp; <a class="delete" id="delete-{{ n.id }}">&times;</a></b></p>
                     <p>Votes: {{ n.score }}</p>
                     <p><a class="report" id="report-{{ n.id }}"><i>Report this name as offensive</i></a></p>
