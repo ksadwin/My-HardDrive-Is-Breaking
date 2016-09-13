@@ -13,7 +13,7 @@ class User(db.Model):
 
     username = db.Column(db.String(32))
     password = db.Column(db.String(128))
-    photo_url = db.Column(db.String(256))
+    photo_url = db.Column(db.String(2000))
     suggestions = db.Column(db.Boolean)
     about = db.Column(db.String(1024))  # for gender, age, what type of name sought, any misc. info
     private = db.Column(db.Boolean)
