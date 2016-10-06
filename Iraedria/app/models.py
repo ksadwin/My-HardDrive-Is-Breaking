@@ -27,7 +27,7 @@ class Chapter(db.Model):
     date_modified = db.Column(db.Integer)
     booknum = db.Column(db.Integer)
     likes = db.Column(db.Integer)
-    photo_url = db.Column(db.String)  # edit this column manually with the db viewer
+    photo_url = db.Column(db.String)  # comma-separated list of urls
 
     def __init__(self, filename, bookstr):
         bookstr = bookstr.lower()

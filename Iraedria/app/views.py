@@ -1,8 +1,9 @@
 from app import app, db
 from flask import render_template, redirect, url_for, abort, jsonify
 from app.models import Chapter, Book
-from app.forms import TagForm
+from app.forms import TagForm, PhotoForm
 from urllib.parse import quote_plus
+from config import SECRET_TO_ADD_PHOTOS
 
 from tumblrtaggin.taggregator import find_tags
 
@@ -73,7 +74,11 @@ def chapter(book, num):
         bookenum = Book[book.lower()]
         c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
         if c:
-            return render_template("chapter.html", current=c, bookstr=book)
+            if c.photo_url is not None:
+                img_list = c.photo_url.split(",")
+            else:
+                img_list = []
+            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list)
         abort(404)
     except KeyError:
         abort(404)
@@ -93,13 +98,43 @@ def _like(book, num):
         c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
         if c:
             c.likes += 1
-        db.session.commit()
+            db.session.commit()
     except KeyError:
         pass
     return redirect(url_for('chapter', book=book, num=num))
 
 
 # SECRET VIEWS
+
+@app.route('/<book>/<int:num>/add_photo', methods=('GET', 'POST'))
+def add_photo(book, num):
+    """
+    Manually editing the db to add photos is the literal worst idea I've ever had
+    :param book: title of book
+    :param num: chapter number
+    :return: page with a form, or if chapter is invalid, redirect to index
+    """
+    try:
+        bookenum = Book[book.lower()]
+        c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
+        if c:
+            f = PhotoForm()
+            if f.validate_on_submit():
+                app.logger.debug(SECRET_TO_ADD_PHOTOS + " vs " + f.password.data)
+                if f.password.data == SECRET_TO_ADD_PHOTOS:
+                    if c.photo_url is None:
+                        c.photo_url = f.urls_to_add.data
+                    else:
+                        c.photo_url += "," + f.urls_to_add.data
+                    db.session.commit()
+                    return redirect(url_for("chapter", book=book, num=num))
+                else:
+                    return "get out of my house"
+            return render_template("add_photo.html", c=c, form=f)
+    except KeyError:
+        pass
+    abort(404)
+
 
 @app.route('/stats')
 def view_likes():
@@ -151,10 +186,10 @@ def taggremaker():
     c = "fffafb"
     h = 200
     w = 300
-    iframe_code = iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
+    iframe_code = '<iframe src="http://iraedria.ksadwin.com' +\
                   url_for('taggregator', username=u, color=c, height=h, width=w) +\
                   '" frameBorder="0" scrolling="no"></iframe>'
-    f = TagForm(csrf_enabled=False)  # FIXME: or dont. fite me
+    f = TagForm()
     if f.validate_on_submit():
         u = f.username.data
         c = f.color.data
