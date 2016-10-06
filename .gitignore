@@ -124,3 +124,5 @@ fabric.properties
 # ADDED BY K
 
 Iraedria/static/text/
+**/config.py
+**/data.sqlite
