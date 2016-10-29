@@ -29,7 +29,7 @@ def is_current(match):
     :param match: BeautifulSoup match
     :return: True if recent, False if obsolete.
     """
-    str_date = match.find(class_="post_date").get_text()  # of form Aug 8, 2016
+    str_date = match.find(class_="post_date").get_text().strip()  # of form Aug 8, 2016
     logging.debug("Date: "+str_date)
     post_date = datetime.strptime(str_date, "%b %d, %Y")
     age = datetime.today() - post_date
