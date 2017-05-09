@@ -52,7 +52,7 @@ def prologue(book):
     try:
         bookenum = Book[book.lower()]
         c = Chapter.query.filter_by(num=0, booknum=bookenum.value).first()
-        if c:
+        if c and c.visible:
             return render_template("prologue.html", text=c.text, book=book)
         abort(404)
     except KeyError:
@@ -73,7 +73,7 @@ def chapter(book, num):
     try:
         bookenum = Book[book.lower()]
         c = Chapter.query.filter_by(num=num, booknum=bookenum.value).first()
-        if c:
+        if c and c.visible:
             if c.photo_url is not None:
                 img_list = c.photo_url.split(",")
             else:

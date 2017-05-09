@@ -49,7 +49,7 @@ body {
 
 .prologue, .cover {
     margin: auto;
-    color: rgba(255,255,255,.7);
+    color: #EEE;
     text-shadow: 0 0 1em black;
 }
 
