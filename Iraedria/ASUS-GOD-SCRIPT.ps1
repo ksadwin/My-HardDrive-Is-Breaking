@@ -15,7 +15,6 @@ $parserpath = "C:\Users\Asus\Documents\GitHub\My-HardDrive-Is-Breaking\Iraedria\
 $updaterpath = "C:\Users\Asus\Documents\GitHub\My-HardDrive-Is-Breaking\Iraedria\updater.py"
 
 $pempath = "C:\Users\Asus\Desktop\IRAEDRIA.PEM"
-# this is wild, thanks cygwin
 $dbpath = "C:/Users/Asus/Documents/GitHub/My-HardDrive-Is-Breaking/Iraedria/data.sqlite"
 $basehtmlpath = "C:/Users/Asus/Documents/GitHub/My-HardDrive-Is-Breaking/Iraedria/templates/base.html"
 

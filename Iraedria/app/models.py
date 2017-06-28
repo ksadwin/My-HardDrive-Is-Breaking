@@ -44,7 +44,7 @@ class Chapter(db.Model):
         self.visible = True
 
     def __repr__(self):
-        return "%r: Chapter %r" % (Book(self.booknum).name.title(), self.id)
+        return "%r: Chapter %r" % (Book(self.booknum).name.title(), self.num)
 
 
 db.create_all()

@@ -80,19 +80,20 @@ def update():
             # note to future self: keep this in this outer scope, not in the if statement about the chapter existing
             # there may come a day when you may need to add the links even though the files are not new
             # don't you remember how often you screw up...?
-            c_id = "%s-%s" % (b.lower(), c)
-            if soup.find(id=c_id) is None:
-                # I started to make a separate function for adding a chapter link but it needed like 5 parameters so
-                li = soup.new_tag("li")
-                li['id'] = c_id
-                link = soup.new_tag("a")
-                link['href'] = "{{ url_for('chapter', num=%s, book='%s') }}" % (c, b.lower())
-                if c == "0":
-                    link.append("Prologue")
-                else:
-                    link.append("Chapter "+c)
-                li.append(link)
-                b_ul.append(li)
+            if current_chapter.visible:
+                c_id = "%s-%s" % (b.lower(), c)
+                if soup.find(id=c_id) is None:
+                    # I started to make a separate function for adding a chapter link but it needed like 5 parameters so
+                    li = soup.new_tag("li")
+                    li['id'] = c_id
+                    link = soup.new_tag("a")
+                    link['href'] = "{{ url_for('chapter', num=%s, book='%s') }}" % (c, b.lower())
+                    if c == "0":
+                        link.append("Prologue")
+                    else:
+                        link.append("Chapter "+c)
+                    li.append(link)
+                    b_ul.append(li)
 
     f = open(PATH_TO_BASE_TEMPLATE, "w")
     try:

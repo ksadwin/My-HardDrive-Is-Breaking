@@ -78,7 +78,11 @@ def chapter(book, num):
                 img_list = c.photo_url.split(",")
             else:
                 img_list = []
-            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list)
+            cnext = Chapter.query.filter_by(num=num+1, booknum=bookenum.value).first()
+            bnext = False
+            if cnext and cnext.visible:
+                bnext = True
+            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list, bnext=bnext)
         abort(404)
     except KeyError:
         abort(404)
