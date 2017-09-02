@@ -3,6 +3,7 @@
 
 # edit by k: just heckin get rid of the idea folder. i dont. want it.
 **/.idea/
+/Iraedria/blogposts/
 
 ## File-based project format:
 *.iws
