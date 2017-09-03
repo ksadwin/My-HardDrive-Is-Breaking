@@ -79,7 +79,7 @@ if __name__ == "__main__":
     ttk.Label(mainframe, text="Book:").grid(column=1, row=2, sticky=E)
 
     row = 2
-    trigger_list = ["excessive gore", "overt racism (non-fictional)"]
+    trigger_list = ["gore", "overt racism (non-fictional)"]
     trigger_dict = dict()
     for t in trigger_list:
         trigger_dict[t] = IntVar()
