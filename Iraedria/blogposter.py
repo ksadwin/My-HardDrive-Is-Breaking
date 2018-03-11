@@ -1,5 +1,7 @@
 from app.models import Chapter, Book
 from tkinter import ttk, Tk, StringVar, N, S, W, E, Checkbutton, IntVar
+from config import *
+import pytumblr
 
 
 def debug_log(text):
@@ -11,6 +13,44 @@ def debug_log(text):
         debuglog.close()
 
 
+def blog_tester():
+    client = pytumblr.TumblrRestClient(
+        OAUTH_CONSUMER_KEY,
+        OAUTH_CONSUMER_SECRET,
+        OAUTH_KLIZZINATOR_KEY,
+        OAUTH_KLIZZINATOR_SECRET
+    )
+
+    client.create_text("airdeari",
+                       state="published",
+                       format="HTML",
+                       body="<p>when i said one more i lied. i am constantly lying</p>",
+                       tweet="what the actual funk does this do")
+
+
+def blog_harder(book, chapter):
+    client = pytumblr.TumblrRestClient(
+        OAUTH_CONSUMER_KEY,
+        OAUTH_CONSUMER_SECRET,
+        OAUTH_KLIZZINATOR_KEY,
+        OAUTH_KLIZZINATOR_SECRET
+    )
+
+    f = open("blogposts\\%s%d.txt" % (book, chapter), "r")
+
+    title = "UPDATE: Chapter %d (%s)" % (chapter, book.title())
+    tags = ["update", "iraedria", "writing", "fiction", "iraedria update", "%s" % book]
+
+    client.create_text("iraedria",
+                       state="published",
+                       tags=tags,
+                       title=title,
+                       format="HTML",
+                       body=f.read())
+
+    f.close()
+
+
 def blog_dog(*args):
     chapter = int(chapnum.get())
     book = str(bookname.get()).lower()
@@ -18,9 +58,9 @@ def blog_dog(*args):
     root.destroy()
 
     f = open("blogposts\\%s%d.txt" % (book, chapter), "w")
-    f.write("Title\nUPDATE: Chapter %d (%s)\n\n" % (chapter, book.title()))
-    f.write("Tags\nupdate,iraedria,writing,fiction,iraedria update,%s\n" % book)
-    f.write("(yeah this list is a work in progress i'll figure it out)\n\n\n")
+    # f.write("Title\nUPDATE: Chapter %d (%s)\n\n" % (chapter, book.title()))
+    # f.write("Tags\nupdate,iraedria,writing,fiction,iraedria update,%s\n" % book)
+
     f.write("<p><b><a href='http://iraedria.ksadwin.com/%s/%d' target='_blank'>Read the latest chapter here.</a></b> Or, <i><a href='http://iraedria.ksadwin.com/' target='_blank'>start from the beginning.</a></i></p>\n\n" % (book, chapter))
     f.write("<p>Please reblog to spread the word!</p>\n\n")
     f.write("<p>See additional updates & content warnings for this chapter under the cut.</p>\n\n")
@@ -56,6 +96,8 @@ def blog_dog(*args):
     f.write("<p>If you would like to add a content warning to the <a href='http://iraedria.tumblr.com/warnings'>global list</a>, or report a missing warning, <a href='http://iraedria.tumblr.com/ask'>send an ask.</a></p>\n\n")
 
     f.close()
+
+    blog_harder(book, chapter)
 
 if __name__ == "__main__":
     root = Tk()
