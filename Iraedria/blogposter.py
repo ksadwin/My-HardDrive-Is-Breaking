@@ -24,8 +24,9 @@ def blog_tester():
     client.create_text("airdeari",
                        state="published",
                        format="HTML",
-                       body="<p>when i said one more i lied. i am constantly lying</p>",
-                       tweet="what the actual funk does this do")
+                       body="<p>sorry everybody have to try this again</p>",
+                       tweet="what the actual funk does this do [URL]",
+                       tags=["at least I know the API is still valid"])
 
 
 def blog_harder(book, chapter):
@@ -88,10 +89,14 @@ def blog_dog(*args):
         f.write("</ul>\n\n")
 
     f.write("<p>Content warnings for this chapter:</p>\n\n<ul>\n")
+    flag_notriggers = True
     for t in trigger_list:
         debug_log(str(trigger_dict[t].get()))
         if trigger_dict[t].get():
             f.write("  <li>%s</li>\n" % t)
+            flag_notriggers = False
+    if flag_notriggers:
+        f.write("  <li>NONE. Neat!</li>\n" % t)
     f.write("</ul>\n\n")
     f.write("<p>If you would like to add a content warning to the <a href='http://iraedria.tumblr.com/warnings'>global list</a>, or report a missing warning, <a href='http://iraedria.tumblr.com/ask'>send an ask.</a></p>\n\n")
 
@@ -100,6 +105,7 @@ def blog_dog(*args):
     blog_harder(book, chapter)
 
 if __name__ == "__main__":
+
     root = Tk()
     root.title("LETS MAKE A BLOG BOST")
 
