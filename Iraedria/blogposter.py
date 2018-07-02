@@ -96,7 +96,7 @@ def blog_dog(*args):
             f.write("  <li>%s</li>\n" % t)
             flag_notriggers = False
     if flag_notriggers:
-        f.write("  <li>NONE. Neat!</li>\n" % t)
+        f.write("  <li>NONE. Neat!</li>\n")
     f.write("</ul>\n\n")
     f.write("<p>If you would like to add a content warning to the <a href='http://iraedria.tumblr.com/warnings'>global list</a>, or report a missing warning, <a href='http://iraedria.tumblr.com/ask'>send an ask.</a></p>\n\n")
 
@@ -127,7 +127,7 @@ if __name__ == "__main__":
     ttk.Label(mainframe, text="Book:").grid(column=1, row=2, sticky=E)
 
     row = 2
-    trigger_list = ["gore", "overt racism (non-fictional)"]
+    trigger_list = ["gore", "overt racism (non-fictional)", "ableism"]
     trigger_dict = dict()
     for t in trigger_list:
         trigger_dict[t] = IntVar()
