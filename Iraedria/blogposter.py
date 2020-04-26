@@ -2,15 +2,24 @@ from app.models import Chapter, Book
 from tkinter import ttk, Tk, StringVar, N, S, W, E, Checkbutton, IntVar
 from config import *
 import pytumblr
+from bs4 import BeautifulSoup
+
+
+TESTING = True
 
 
 def debug_log(text):
-    debug = False
-
-    if debug:
+    if TESTING:
         debuglog = open("debuglog.txt", "a")
         debuglog.write(text + "\n")
         debuglog.close()
+
+
+def get_first_para(chapter):
+    text = chapter.text
+    soup = BeautifulSoup(text, "lxml")
+    first_para = soup.find_all("p")[0]
+    return first_para.get_text()
 
 
 def blog_tester():
@@ -58,17 +67,19 @@ def blog_dog(*args):
     booknum = Book[book].value
     root.destroy()
 
+    newchapter = Chapter.query.filter_by(num=chapter, booknum=booknum).first()
+
     f = open("blogposts\\%s%d.txt" % (book, chapter), "w")
     # f.write("Title\nUPDATE: Chapter %d (%s)\n\n" % (chapter, book.title()))
     # f.write("Tags\nupdate,iraedria,writing,fiction,iraedria update,%s\n" % book)
 
     f.write("<p><b><a href='http://iraedria.ksadwin.com/%s/%d' target='_blank'>Read the latest chapter here.</a></b> Or, <i><a href='http://iraedria.ksadwin.com/' target='_blank'>start from the beginning.</a></i></p>\n\n" % (book, chapter))
+    f.write("<blockquote>%s</blockquote>\n\n" % get_first_para(newchapter))
     f.write("<p>Please reblog to spread the word!</p>\n\n")
     f.write("<p>See additional updates & content warnings for this chapter under the cut.</p>\n\n")
     f.write("[[MORE]]\n\n")
 
     # do a database lookup comparing update time for the new chapter to all other chapters
-    newchapter = Chapter.query.filter_by(num=chapter, booknum=booknum).first()
     chaps = Chapter.query.filter_by(visible=True).all()
     debug_log(str(chaps))
     updatetime = newchapter.date_modified
@@ -101,8 +112,8 @@ def blog_dog(*args):
     f.write("<p>If you would like to add a content warning to the <a href='http://iraedria.tumblr.com/warnings'>global list</a>, or report a missing warning, <a href='http://iraedria.tumblr.com/ask'>send an ask.</a></p>\n\n")
 
     f.close()
-
-    blog_harder(book, chapter)
+    if not TESTING:
+        blog_harder(book, chapter)
 
 if __name__ == "__main__":
 

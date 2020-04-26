@@ -36,7 +36,7 @@ def internal_server_error(e):
 @app.route('/')
 def index():
     """
-    Just return the index page. No dynamic elements, I think.
+    Just return the index page. No dynamic elements.
     :return: static index template
     """
     return render_template("index.html")
@@ -53,7 +53,16 @@ def prologue(book):
         bookenum = Book[book.lower()]
         c = Chapter.query.filter_by(num=0, booknum=bookenum.value).first()
         if c and c.visible:
-            return render_template("prologue.html", text=c.text, book=book)
+            if c.photo_url is not None:
+                img_list = c.photo_url.split(",")
+            else:
+                img_list = []
+            cnext = Chapter.query.filter_by(num=1, booknum=bookenum.value).first()
+            bnext = False
+            if cnext and cnext.visible:
+                bnext = True
+            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list, bnext=bnext, title="Prologue")
+            # return render_template("prologue.html", text=c.text, book=book)
         abort(404)
     except KeyError:
         abort(404)
@@ -82,7 +91,7 @@ def chapter(book, num):
             bnext = False
             if cnext and cnext.visible:
                 bnext = True
-            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list, bnext=bnext)
+            return render_template("chapter.html", current=c, bookstr=book, imgs=img_list, bnext=bnext, title="Chapter " + str(c.num))
         abort(404)
     except KeyError:
         abort(404)

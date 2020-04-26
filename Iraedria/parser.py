@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import sys
 
-TEST_FILE_PATH = "c:\\Users\\Kelly\\Dropbox\\Stories\\Iraedria\\Vega\\2.htm"
+TEST_FILE_PATH = r"C:\Users\Asus\Documents\github\My-HardDrive-Is-Breaking\Iraedria\static\text\Vega\3.html"
 
 
 def get_text_from_path(fpath):
@@ -30,7 +30,9 @@ def parse(html):
     soup = BeautifulSoup(html, 'html.parser')
     paras = soup.find_all("p", "MsoNormal")
     final = ""
-    for p in paras:
+    first = True
+    for i in range(len(paras)):
+        p = paras[i]
         del p['class']
         del p['style']
         # p = add_attrs_to_p(p)
@@ -41,7 +43,28 @@ def parse(html):
                     match.extract()
                 else:
                     match.unwrap()
-        final += str(p)+"\n"
+        # special dream markers
+        if p.string == "START_DREAM":
+            if final != "":
+                final += "</div>\n"
+            final += "<div class='container dream'>\n"
+            first = True
+        elif p.string == "END_DREAM":
+            final += "</div>\n"
+            if i != len(paras) - 1:
+                final += "<div class='container page'>\n"
+                first = True
+        else:
+            if final == "":
+                final += "<div class='container page'>\n"
+            if first:
+                # dropcap time!!!
+                first = False
+                text = str(p)
+                final += "%s<span class=\"drop-cap\">%s</span>%s" % (text[0:3], text[3], text[4:])
+            else:
+                final += str(p)+"\n"
+    # do not add the last </div> to final. it is included in chapter.html
     return final
 
 

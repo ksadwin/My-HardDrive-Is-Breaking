@@ -1,13 +1,14 @@
 {% extends 'base.html' %}
 
-{% block subtitle %}Chapter {{ current.num }} - {{ bookstr.title() }} - {% endblock %}
+{% block subtitle %}{{ title }} - {{ bookstr.title() }} - {% endblock %}
 
 {% block content %}
 
-        <div class="container chapter">
-            <h2>Chapter {{ current.num }}</h2>
+        <div class="container dream">
+            <h2>{{ title }}</h2>
+        </div>
 
-            {{ current.text|safe }}
+        {{ current.text|safe }}
 
             <!-- Images link -->
             {% if imgs != [] %}
@@ -21,7 +22,7 @@
                 <div class="modal-content">
                   <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Chapter {{ current.num }} imagery</h4>
+                    <h4 class="modal-title" id="myModalLabel">{{ title }} imagery</h4>
                   </div>
                   <div class="modal-body">
                     {% for url in imgs %}
@@ -37,11 +38,6 @@
 
             {% endif %}
 
-
-            <!-- Likes link -->
-            <div class="arrow right like">
-                <a href="{{ url_for('_like', book=bookstr, num=current.num) }}"><i class="glyphicon glyphicon-thumbs-up"></i></a>
-            </div>
             <!-- Next chapter link -->
             {% if bnext %}
             <div class="arrow right">
@@ -50,7 +46,7 @@
             {% endif %}
 
             <div id="disqus_thread"></div>
-        </div>
+        </div> <!-- trust me here buddy -->
 
             <script>
 

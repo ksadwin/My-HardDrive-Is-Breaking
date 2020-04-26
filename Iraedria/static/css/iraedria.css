@@ -30,16 +30,18 @@ body {
     background-attachment: fixed;
 }
 
-
-.chapter {
-    background-color: rgba(255,255,255,.7);
+.dream, .page {
     max-width: 900px;
-    margin-top: 60px;
+}
+
+.page {
+    background-color: rgba(255,255,255,.7);
+    margin-top: 20px;
     margin-bottom: 60px;
     padding: 5%;
 }
 
-.chapter p, .prologue p, .cover p {
+.page p, .dream p, .cover p {
     font-family: Garamond, serif;
     font-size: 1.4em;
     padding-bottom: 1.2em;
@@ -47,21 +49,18 @@ body {
     margin: auto;
 }
 
-.prologue, .cover {
+.dream, .cover {
     margin: auto;
     color: #EEE;
     text-shadow: 0 0 1em black;
 }
 
-.prologue {
-    max-width: 900px;
-}
-
 p .drop-cap {
-    font-size: 4em;
+    font-size: 3.1em;
     float: left;
-    line-height: 1em;
-    padding-right: 1%;
+    line-height: 0.8em;
+    padding-right: 0.5%;
+    padding-top: 0.5%;
 }
 
 .arrow {
@@ -81,7 +80,6 @@ p .drop-cap {
     margin: auto;
 }
 
-/* For index */
 h1 {
     font-family: Garamond, serif;
     font-size: 15vmin;
@@ -106,77 +104,4 @@ a {
 a, a:link, a:visited, a:hover, a:active {
     text-decoration: none;
 }
-
-/*old*/
-
-/*
-.demo {
-    background-color: #fff8ee;
-}
-
-#story {
-    width: 60%;
-    float: left;
-    margin: 25px;
-    padding: 10px;
-    background-color: #fffff8;
-    border: #eeeedd 1px solid;
-    font-family: Garamond, serif;
-    font-size: 24px;
-}
-
-#comments {
-    padding: 25px;
-    border-left: #d8e8d8 1px solid;
-    background-color: #f8fff0;
-    float: right;
-    width: 35%;
-    height:100vh
-}
-
-.comment {
-    border: #d8e8d8 1px solid;
-    background-color: white;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-.comment p {
-    padding-left: 10px;
-}
-
-#story .airdeari {
-    border-bottom: violet 1px dashed;
-}
-
-.comment .airdeari {
-    color: violet;
-}
-
-#story .megsradioluvr {
-    border-bottom: turquoise 1px dashed;
-}
-
-#story .active {
-    color: turquoise;
-}
-
-.comment .megsradioluvr {
-    color: turquoise;
-}
-
-#comments .active {
-    border: turquoise 1px solid;
-    box-shadow: 0px 5px 15px #ccc;
-}
-
-#story .jbiebz {
-    border-bottom: orange 1px dashed;
-}
-
-.comment .jbiebz {
-    color: orange;
-}
-
-*/
 
